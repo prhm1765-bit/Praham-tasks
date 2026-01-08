@@ -1,0 +1,59 @@
+<div class="auth-container">
+	<form class="auth-card" [formGroup]="signInForm" (ngSubmit)="submit()">
+		<h2>Welcome Back</h2>
+		<p class="subtitle">Sign in to continue</p>
+
+		<!-- EMAIL -->
+		<div class="form-group">
+			<mat-form-field appearance="outline" class="full-width">
+				<mat-label>Email</mat-label>
+				<input
+					matInput
+					type="email"
+					formControlName="email"
+					maxlength="30"
+					pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+					placeholder="Enter your email"
+				/>
+				<mat-error *ngIf="signInForm.get('email')?.hasError('required')">
+				Email is required
+				</mat-error>
+				<mat-error *ngIf="signInForm.get('email')?.hasError('pattern')">
+				Enter a valid email
+				</mat-error>
+			</mat-form-field>
+		</div>
+
+		<!-- PASSWORD -->
+		<mat-form-field appearance="outline" class="full-width">
+			<mat-label>Password</mat-label>
+			<input #pwd matInput type="password" formControlName="password" minlength="8" placeholder="Enter password"/>
+			<button
+				mat-icon-button
+				matSuffix
+				type="button"
+				(mousedown)="pwd.type='text'"
+				(mouseup)="pwd.type='password'"
+				(mouseleave)="pwd.type='password'">
+				<mat-icon>visibility</mat-icon>
+			</button>
+			<mat-error *ngIf="signInForm.get('password')?.hasError('required')">
+				Password is required
+			</mat-error>
+			<mat-error *ngIf="signInForm.get('password')?.hasError('minlength')">
+				Minimum 8 characters
+			</mat-error>
+		</mat-form-field>
+
+		<!-- SUBMIT -->
+		<button type="submit" [disabled]="signInForm.invalid">
+			Sign In
+		</button>
+
+		<div>
+			<p class="signup-link">
+				<a routerLink="/sign-up">Dont have an account?Sign Up</a>
+			</p>
+		</div>
+	</form>
+</div>

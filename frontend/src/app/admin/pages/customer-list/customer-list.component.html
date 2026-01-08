@@ -1,0 +1,44 @@
+<div class="admin-page">
+	<div class="admin-card">
+		<h2>Customers</h2>
+		<button (click)="logout()" >Log out</button>
+		<p class="subtitle">Manage registered customers</p>
+		<p *ngIf="loading" class="loading-text">Loading customers...</p>
+
+		<!-- Header -->
+		<div class="list-header" *ngIf="!loading && customers.length">
+			<span>ID</span>
+			<span>Name</span>
+			<span>Email</span>
+			<span>Mobile</span>
+			<span>Gender</span>
+			<span>Action</span>
+		</div>
+
+		<!-- Rows -->
+		<div class="list-row" *ngFor="let customer of customers">
+			<span>{{ customer.id }}</span>
+			<span>{{ customer.firstName }} {{ customer.lastName }}</span>
+			<span>{{ customer.email }}</span>
+			<span>{{ customer.mobilenumber }}</span>
+			<span>{{ customer.gender }}</span>
+			<span>
+			<button class="delete-btn" (click)="deleteCustomer(customer.id)">
+				Delete
+			</button>
+			</span>
+		</div>
+
+		<p *ngIf="!loading && !customers.length" class="empty-text">
+			No customers found
+		</p>
+	</div>
+	<app-popup
+		*ngIf="showPopup"
+		[title]="popupTitle"
+		[message]="popupMessage"
+		[showYes]="showYes"
+		(yes)="confirmDelete()"
+		(close)="showPopup = false">
+	</app-popup>
+</div>

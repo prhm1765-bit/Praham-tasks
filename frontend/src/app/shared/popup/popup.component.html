@@ -1,0 +1,12 @@
+<div class="overlay">
+	<div class="popup">
+		<h2>{{ title }}</h2>
+
+		<p>{{ message }}</p>
+
+		<div style="text-align: right; margin-top: 15px">
+			<button mat-button *ngIf="showYes" (click)="onYes()">Yes</button>
+			<button mat-button (click)="onClose()">Close</button>
+		</div>
+	</div>
+</div>

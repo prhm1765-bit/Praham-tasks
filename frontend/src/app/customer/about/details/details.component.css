@@ -1,0 +1,110 @@
+.customer-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.customer-card {
+  width: 100%;
+  max-width: 720px;
+  background: #fff;
+  padding: 30px;
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  animation: fadeIn 0.4s ease;
+}
+
+/* Headings */
+.customer-card h2 {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.address-section h3 {
+  margin: 20px 0 12px;
+  font-size: 18px;
+  color: #333;
+}
+
+/* Customer info grid */
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.details-grid p {
+  background: #f7f8fc;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.details-grid span {
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 4px;
+}
+
+/* Address cards */
+.address-card {
+  background: #f7f8fc;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+
+.address-card p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.address-card span {
+  font-size: 12px;
+  color: #777;
+  display: block;
+}
+
+/* Edit button */
+.edit-btn {
+  width: 100%;
+  margin-top: 22px;
+  padding: 14px;
+  border-radius: 30px;
+  border: none;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.edit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* Loading text */
+.loading {
+  color: #fff;
+  font-size: 16px;
+  margin-top: 40px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Reuse your animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

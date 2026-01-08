@@ -1,0 +1,18 @@
+<!-- Top bar -->
+<header class="top-bar">
+	<button mat-icon-button (click)="toggleNav()">
+		<mat-icon>menu</mat-icon>
+	</button>
+	<span class="app-title">My App</span>
+	<span class="app-title"><button (click)="logout()" >Log out</button></span>
+	<span class="app-title"><button (click)="deleteAccount()">
+		Delete Account
+	</button></span>
+</header>
+
+<!-- Sidebar -->
+<nav class="side-nav" [class.open]="isNavOpen">
+	<a routerLink="" routerLinkActive="active">Home</a>
+	<a routerLink="/about" routerLinkActive="active">About</a>
+	<a (click)="goToDetails()">Details</a>
+</nav> 

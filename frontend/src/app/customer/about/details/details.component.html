@@ -1,0 +1,31 @@
+<app-nav></app-nav>
+
+<div class="customer-container">
+	<div class="customer-card" *ngIf="customer">
+		<h2>Customer Details</h2>
+		<div class="details-grid">
+			<p><span>ID</span> {{ customer.id | number }}</p>
+			<p><span>First Name</span> {{ customer.firstName | titlecase }}</p>
+			<p><span>Last Name</span> {{ customer.lastName | titlecase }}</p>
+			<p><span>Email</span> {{ customer.email | lowercase }}</p>
+			<p><span>Mobile</span>{{ customer.mobilenumber | slice:0:3 }}-{{ customer.mobilenumber | slice:3:6 }}-{{ customer.mobilenumber | slice:6 }}</p>
+			<p><span>Gender</span> {{ customer.gender }}</p>
+			<p><span>Date of Birth</span> {{ customer.dob | date:'dd MMM yyyy' }}</p>
+		</div>
+
+		<div class="address-section" *ngIf="customer?.address?.length">
+			<h3>Addresses</h3>
+			<div class="address-card" *ngFor="let addr of customer.address">
+				<p><span>Address</span> {{ addr.address | titlecase }}</p>
+				<p><span>Type</span> {{ addr.addresstype | uppercase }}</p>
+			</div>
+		</div>
+
+		<button class="edit-btn" [routerLink]="['/edit', customer.id]">
+			Edit Customer
+		</button>
+	</div>
+	<div class="loading" *ngIf="!customer">
+		Loading customer details...
+	</div>
+</div>

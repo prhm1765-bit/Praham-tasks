@@ -1,0 +1,16 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup {
+  background: #fff;
+  padding: 20px;
+  width: 300px;
+  border-radius: 6px;
+  text-align: center;
+}

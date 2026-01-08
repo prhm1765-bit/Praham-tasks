@@ -1,0 +1,119 @@
+/* Page background */
+.admin-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  padding: 24px;
+  position: relative;
+}
+
+/* Card container */
+.admin-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 1100px;
+  margin: auto;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  animation: fadeIn 0.4s ease;
+  position: relative;
+  z-index: 1;
+}
+
+/* Heading */
+.admin-card h2 {
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+/* Grid layout */
+.list-header,
+.list-row {
+  display: grid;
+  grid-template-columns: 60px 1.5fr 2fr 1.5fr 1fr 100px;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 12px;
+}
+
+/* Header style */
+.list-header {
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+
+/* Row style */
+.list-row {
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+.list-row:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.list-row:hover {
+  background-color: #f1f3ff;
+}
+
+/* Delete button */
+.delete-btn {
+  background: linear-gradient(135deg, #e53935, #c62828);
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  cursor: pointer;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Empty / loading text */
+.loading-text,
+.empty-text {
+  text-align: center;
+  margin-top: 20px;
+  color: #666;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .admin-card {
+    overflow-x: auto;
+  }
+
+  .list-header,
+  .list-row {
+    min-width: 800px;
+  }
+}
+
+
+app-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  /* create overlay effect */
+  background: rgba(0, 0, 0, 0.5);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Center the popup box itself */
+app-popup > * {
+  background: #fff;
+  padding: 20px;
+  border-radius: 6px;
+}
