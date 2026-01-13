@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
+import {  ActivatedRouteSnapshot, Router } from '@angular/router';
 
 @Injectable({
 	providedIn: 'root'
 })
 
-export class AuthGuard implements CanActivate {
+export class AuthGuard  {
 
 	constructor(private router: Router) {}
 
@@ -30,7 +30,7 @@ export class AuthGuard implements CanActivate {
 
 		//  CHANGE: block ADMIN from customer pages
 		if (!requiredRole && role === 'ADMIN') {
-			this.router.navigate(['/admin/customers']); // CHANGE
+			this.router.navigate(['/admin/customers']);
 			return false;
 		}
 

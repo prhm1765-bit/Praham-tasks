@@ -1,0 +1,44 @@
+package com.CustomerRegi.controller;
+
+import com.CustomerRegi.mapper.CustomerMapper;
+import com.CustomerRegi.service.CustomerRegistrationService;
+import com.CustomerRegi.service.ReportService;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/reports")
+public class ReportController {
+
+	private final ReportService reportService;
+	private final CustomerMapper customerMapper;
+
+	public ReportController(ReportService reportService, CustomerMapper customerMapper) {
+		this.reportService = reportService;
+		this.customerMapper = customerMapper;
+	}
+
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/customers")
+	public ResponseEntity<byte[]> generateCustomerReport() throws Exception {
+
+		// Export to PDF
+		byte[] pdfBytes = reportService.exportToPdf("customer_details.jasper");
+
+		// Return as HTTP response
+		return ResponseEntity.ok()
+			.header(HttpHeaders.CONTENT_DISPOSITION,
+				"inline; filename=customer-report.pdf")
+			.contentType(MediaType.APPLICATION_PDF)
+			.body(pdfBytes);
+	}
+}

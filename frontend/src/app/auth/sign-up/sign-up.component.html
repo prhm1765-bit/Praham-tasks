@@ -75,6 +75,9 @@
 				<mat-error *ngIf="signUpForm.get('email')?.hasError('pattern')">
 					Enter a valid email
 				</mat-error>
+				<mat-error *ngIf="signUpForm.get('email')?.hasError('backend')">
+  					{{ signUpForm.get('email')?.getError('backend') }}
+				</mat-error>
 			</mat-form-field>
 		</div>
 

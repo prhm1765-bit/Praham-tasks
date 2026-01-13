@@ -138,8 +138,18 @@ export class SignUpComponent {
 					this.router.navigate(['/sign-in']);
 				},
 				error: (err) => {
-					const msg = err?.error?.errors?.message || 'Registration failed';
-					alert(msg); 
+					const backendErrors = err?.error?.errors;
+
+  // EMAIL ALREADY EXISTS
+  if (backendErrors?.email) {
+    this.signUpForm
+      .get('email')
+      ?.setErrors({ backend: backendErrors.email });
+    return;
+  }
+
+  // fallback
+  alert('Registration failed');
 				}
 			});
 		}

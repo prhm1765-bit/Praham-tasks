@@ -1,12 +1,11 @@
 package com.CustomerRegi.mapper;
 
+import com.CustomerRegi.dto.CustomerReportDTO;
 import com.CustomerRegi.dto.CustomerReqDTO;
 import com.CustomerRegi.dto.CustomerResDTO;
 import com.CustomerRegi.model.Customer;
 import com.CustomerRegi.model.CustomerAddress;
-import org.mapstruct.AfterMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface CustomerMapper {
@@ -14,6 +13,8 @@ public interface CustomerMapper {
 	Customer toEntity(CustomerReqDTO dto);
 
 	CustomerResDTO toDTO(Customer customer);
+
+	CustomerReportDTO toReportDTO(Customer customer);
 
 	@AfterMapping
 	default void linkCustomer(@MappingTarget Customer customer) {
