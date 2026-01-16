@@ -9,14 +9,17 @@ import { UserService } from '../services/user.service';
 })
 
 export class NavComponent {
+	// Tracks whether the mobile/side nav is open
 	public isNavOpen = false;
 
 	constructor(private router: Router, private userService: UserService) {}
 
+	// Toggle nav open/closed state used by template
 	public toggleNav() {
 		this.isNavOpen = !this.isNavOpen;
 	}
 
+	// Navigate to the authenticated user's details page
 	public goToDetails() {
 		const token = localStorage.getItem('token');
 		if (!token) {
@@ -28,14 +31,16 @@ export class NavComponent {
 		this.router.navigate(['/details', id]);
 	}
 
+	// Simple logout: remove token and redirect to sign-in
 	public logout() {
 		localStorage.removeItem('token'); 
 		window.location.href = '/sign-in'; 
 	}
 
+	// Delete the current user's account via UserService and handle response
 	public deleteAccount() {
 		if (!confirm('Are you sure you want to permanently delete your account?')) {
-		return;
+			return;
 		}
 
 		const token = localStorage.getItem('token');
