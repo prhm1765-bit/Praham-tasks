@@ -16,6 +16,11 @@ public class AuthSeriveImpl implements AuthService {
 	private final PasswordEncoder passwordEncoder;
 	private final JwtService jwtService;
 
+	/**
+	 * @param loginRequestDTO is Customer LogIn Request DTO
+	 * {@inheritDoc}
+	 * @return it is returning JWT token as String
+	 * */
 	public String login(LoginRequestDTO loginRequestDTO) {
 		Customer customer = customerRepo
 			.findByEmail(loginRequestDTO.getEmail())

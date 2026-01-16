@@ -11,9 +11,9 @@ import { UserService } from 'src/app/services/user.service';
 
 export class SignUpComponent {
 
-	signUpForm!: FormGroup;
-	isEditMode = false;
-	customerId!: number;
+	public signUpForm!: FormGroup;
+	public isEditMode = false;
+	private customerId!: number;
 
 	constructor(
 		private fb : FormBuilder,
@@ -89,28 +89,28 @@ export class SignUpComponent {
 		}
 	}
 
-	createAddressGroup(): FormGroup {
+	private createAddressGroup(): FormGroup {
 		return this.fb.group({
 		address: ['', [Validators.required, Validators.minLength(5)]],
 		addresstype: ['home', Validators.required]
 		});
 	}
 
-	get addresses(): FormArray {
+	public get addresses(): FormArray {
 		return this.signUpForm.get('address') as FormArray;
 	}
 
-	addAddress(): void {
+	public addAddress(): void {
 		this.addresses.push(this.createAddressGroup());
 	}
 
-	removeAddress(index: number): void {
+	public removeAddress(index: number): void {
 		if (this.addresses.length > 1) {
-		this.addresses.removeAt(index);
+			this.addresses.removeAt(index);
 		}
 	}
 
-	submit(): void {
+	public submit(): void {
 		if (this.signUpForm.invalid) {
 			this.signUpForm.markAllAsTouched();
 			return;

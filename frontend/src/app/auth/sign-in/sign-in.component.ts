@@ -11,9 +11,9 @@ import { PopupComponent } from "src/app/shared/popup/popup.component";
 	styleUrls: ["./sign-in.component.css"]
 })
 
-export class SignInComponent implements OnInit {
+	export class SignInComponent implements OnInit {
 
-	signInForm!: FormGroup;
+	public signInForm!: FormGroup;
 	constructor(
 		private fb : FormBuilder,
 		private userService: UserService,
@@ -21,14 +21,14 @@ export class SignInComponent implements OnInit {
 		private dialog: MatDialog
 	) {}
 
-	ngOnInit(): void {
+	public ngOnInit(): void {
 		this.signInForm = this.fb.group({
 			email: ['', [Validators.required, Validators.email]],  
 			password: ['', [Validators.required, Validators.minLength(6)]]
 		});
 	}
 
-	submit() {
+	public submit() {
 		if (this.signInForm.invalid) return;
 
 		this.userService.signInUser(this.signInForm.value).subscribe({

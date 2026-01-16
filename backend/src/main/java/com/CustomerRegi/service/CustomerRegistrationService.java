@@ -7,10 +7,20 @@ import java.util.List;
 
 public interface CustomerRegistrationService {
 
+	/**
+	 * @return it is returning list of customer response DTO
+	 * */
 	List<CustomerResDTO> findAll();
 
+	/**
+	 * @return it is returning customer response DTO
+	 * */
 	CustomerResDTO getById(int id);
 
+	/**
+	 * @param dto is Customer Request DTO
+	 * @return it is returning customer response DTO
+	 * */
 	CustomerResDTO saveOrUpdate(CustomerReqDTO dto);
 
 	void delete(int id);

@@ -9,6 +9,10 @@ public final class SecurityUtils {
 
 	private SecurityUtils() {}
 
+	/**
+	 * Method to get the data of Currently logged in customer
+	 * @return Current logged in customer
+	 * */
 	public static Customer currentCustomer() {
 		Authentication auth = SecurityContextHolder
 			.getContext()

@@ -23,6 +23,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private final JwtService jwtService;
 	private final CustomerRepo customerRepo;
 
+	/**
+	 * @param request is all data which is sent by browser to server
+	 * @param response is all data which is sent by server to browser
+	 * @param filterChain moves the request forward after this check is completed
+	 * {@inheritDoc}
+	 * @return it is returning customer response DTO
+	 * */
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 

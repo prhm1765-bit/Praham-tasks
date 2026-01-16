@@ -9,7 +9,7 @@ export class OnlyNumbersDirective {
 	constructor(@Optional() @Self() private control: NgControl) {}
 
 	@HostListener('keydown', ['$event'])
-	onKeyDown(event: KeyboardEvent) {
+	public onKeyDown(event: KeyboardEvent) {
 		const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
 		if (allowedKeys.includes(event.key)) {
 			return;
@@ -20,7 +20,7 @@ export class OnlyNumbersDirective {
 	}
 
 	@HostListener('input', ['$event'])
-	onInput(event: Event) {
+	public onInput(event: Event) {
 		const input = event.target as HTMLInputElement;
 		const cleanValue = input.value.replace(/[^0-9]/g, '');
 		if (input.value !== cleanValue) {

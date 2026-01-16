@@ -15,15 +15,17 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import static com.CustomerRegi.constants.ApiPathConstants.CUSTOMER;
+import static com.CustomerRegi.constants.ApiPathConstants.SIGNUP;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/customer")
+@RequestMapping(CUSTOMER)
 public class CustomerRegistrationController {
 
 	private final CustomerRegistrationService customerRegistrationService;
 
-	@PostMapping("/sign-up")
+	@PostMapping(SIGNUP)
 	public ResponseEntity<CustomerResDTO> save(@Validated(OnCreate.class) @RequestBody CustomerReqDTO customerReqDTO) {
 		return ResponseEntity.ok(customerRegistrationService.saveOrUpdate(customerReqDTO));
 	}

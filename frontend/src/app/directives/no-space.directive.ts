@@ -11,7 +11,7 @@ export class NoSpaceOnlyLettersDirective {
 
 	// ---------- KEYBOARD INPUT ----------
 	@HostListener('keydown', ['$event'])
-	onKeyDown(event: KeyboardEvent) {
+	public onKeyDown(event: KeyboardEvent) {
 		const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
 		if (allowedKeys.includes(event.key)) {
 			return;
@@ -27,7 +27,7 @@ export class NoSpaceOnlyLettersDirective {
 
 	// ---------- PASTE HANDLING ----------
 	@HostListener('paste', ['$event'])
-	onPaste(event: ClipboardEvent) {
+	public onPaste(event: ClipboardEvent) {
 		const pastedText = event.clipboardData?.getData('text') || '';
 		if (!/^[a-zA-Z0-9'-]+$/.test(pastedText)) {
 			event.preventDefault();
@@ -36,7 +36,7 @@ export class NoSpaceOnlyLettersDirective {
 
 	// ---------- MARK TOUCHED ----------
 	@HostListener('blur')
-	onBlur() {
+	public onBlur() {
 		this.control?.control?.markAsTouched();
 	}
 

@@ -9,39 +9,39 @@ import { AdminUserService } from '../../services/admin-customer.service';
 
 export class CustomerListComponent implements OnInit {
 
-	customers: any[] = [];
-	loading = false;
-	showPopup = false;
-	showYes = false;
-	popupTitle = '';
-	popupMessage = '';
-	deleteId!: number;
+	public customers: any[] = [];
+	public loading = false;
+	public showPopup = false;
+	public showYes = false;
+	public popupTitle = '';
+	public popupMessage = '';
+	private deleteId!: number;
 
 	constructor(private adminUserService: AdminUserService) {}
 
-	ngOnInit(): void {
+	public ngOnInit(): void {
 		this.loadUsers();
 	}
 
-	loadUsers(): void {
-	this.loading = true;
-	this.adminUserService.getAllUsers().subscribe({
-		next: (data) => {
-		this.customers = data;
-		this.loading = false;
-		},
-		error: () => {
-		this.loading = false;
-		}
-	});
+	public loadUsers(): void {
+		this.loading = true;
+		this.adminUserService.getAllUsers().subscribe({
+			next: (data) => {
+				this.customers = data;
+				this.loading = false;
+			},
+			error: () => {
+				this.loading = false;
+			}
+		});
 	}
 
-	logout() {
+	public logout() {
 		localStorage.removeItem('token'); 
 		window.location.href = '/sign-in'; 
 	}
 
-	deleteCustomer(id: number): void {
+	public deleteCustomer(id: number): void {
 		this.deleteId = id;
 		this.popupTitle = 'Confirm Delete';
 		this.popupMessage = 'Are you sure you want to delete this user?';
@@ -49,7 +49,7 @@ export class CustomerListComponent implements OnInit {
 		this.showPopup = true;
 	}
 
-	confirmDelete() {
+	public confirmDelete() {
 		this.showPopup = false;
 		this.adminUserService.deleteCustomer(this.deleteId).subscribe({
 			next: () => {
@@ -62,7 +62,7 @@ export class CustomerListComponent implements OnInit {
 			error: (err) => {
 				this.popupTitle = 'Error';
 				this.popupMessage = err?.error?.errors?.message ||
-				err?.error?.message || 'Admin cannot be deleted.';
+					err?.error?.message || 'Admin cannot be deleted.';
 				this.showYes = false;
 				this.showPopup = true;
 			}

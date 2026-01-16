@@ -1,7 +1,6 @@
 package com.CustomerRegi.service;
 
 import com.CustomerRegi.dto.CustomerReportDTO;
-import com.CustomerRegi.dto.CustomerResDTO;
 import com.CustomerRegi.mapper.CustomerMapper;
 import com.CustomerRegi.model.Customer;
 import com.CustomerRegi.repository.CustomerRepo;
@@ -12,7 +11,6 @@ import net.sf.jasperreports.engine.util.JRLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,17 +26,18 @@ public class ReportServiceImpl implements  ReportService {
 	@Autowired
 	private CustomerMapper customerMapper;
 
+	/**
+	* @param reportName is the file name of the report
+	* {@inheritDoc}
+	* @return it is returning bytes for pdf generation
+	* */
 	@Override
 	public byte[] exportToPdf(String reportName) throws Exception {
 
 		// Fetch all customers data
 		List<Customer> customers = customerRepo.findAll();
 
-		List<CustomerReportDTO> data = new ArrayList<>();
-		for (Customer customer : customers) {
-			CustomerReportDTO dto = customerMapper.toReportDTO(customer);
-			data.add(dto);
-		}
+		List<CustomerReportDTO> data = customerMapper.toReportDTOList(customers);
 
 		//Report path
 		ClassPathResource resource = new ClassPathResource("reports/" + reportName);

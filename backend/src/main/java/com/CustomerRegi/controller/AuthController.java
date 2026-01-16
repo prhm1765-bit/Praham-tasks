@@ -10,14 +10,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.CustomerRegi.constants.ApiPathConstants.CUSTOMER;
+import static com.CustomerRegi.constants.ApiPathConstants.LOGIN;
+
 @RestController
-@RequestMapping("/api/customer/login")
+@RequestMapping(CUSTOMER)
 @RequiredArgsConstructor
 public class AuthController {
 
 	private final AuthService authService;
 
-	@PostMapping
+	@PostMapping(LOGIN)
 	public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
 		String token = authService.login(loginRequestDTO);
 		return ResponseEntity.ok(new LoginResponseDTO(token));

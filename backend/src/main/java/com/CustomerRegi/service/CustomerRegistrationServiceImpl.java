@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,6 +21,11 @@ public class CustomerRegistrationServiceImpl implements CustomerRegistrationServ
 	private final CustomerMapper customerMapper;
 	private final PasswordEncoder bCryptPasswordEncoder;
 
+	/**
+	 * @param dto is Customer Request DTO
+	 * {@inheritDoc}
+	 * @return it is returning customer response DTO
+	 * */
 	@Override
 	@Transactional
 	public CustomerResDTO saveOrUpdate(CustomerReqDTO dto) {
@@ -45,22 +49,30 @@ public class CustomerRegistrationServiceImpl implements CustomerRegistrationServ
 		return customerMapper.toDTO(saved);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @return it is returning list of customer response DTO
+	 * */
 	@Override
 	public List<CustomerResDTO> findAll() {
 		List<Customer> customers = customerRepo.findAll();
-		List<CustomerResDTO> customerResDTOS = new ArrayList<>();
-		for (Customer customer : customers) {
-			customerResDTOS.add(customerMapper.toDTO(customer));
-		}
+		List<CustomerResDTO> customerResDTOS = customerMapper.toDTOList(customers);
 		return customerResDTOS;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @return it is returning customer response DTO
+	 * */
 	@Override
 	public CustomerResDTO getById(int id) {
 		Customer customer = customerRepo.findById(id).orElseThrow(() -> new RuntimeException("Customer not found"));
 		return customerMapper.toDTO(customer);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * */
 	@Override
 	public void delete(int id) {
 		customerRepo.deleteById(id);

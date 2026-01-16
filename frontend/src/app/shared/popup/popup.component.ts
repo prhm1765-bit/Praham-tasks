@@ -14,12 +14,12 @@ interface PopupData {
 })
 export class PopupComponent {
 
-	@Input() title = '';
-	@Input() message = '';
-	@Input() showYes = false;
+	@Input() public title = '';
+	@Input() public message = '';
+	@Input() public showYes = false;
 
-	@Output() yes = new EventEmitter<void>();
-	@Output() close = new EventEmitter<void>();
+	@Output() public yes = new EventEmitter<void>();
+	@Output() public close = new EventEmitter<void>();
 
 	constructor(
 		@Optional() private dialogRef: MatDialogRef<PopupComponent>,
@@ -30,7 +30,7 @@ export class PopupComponent {
 		this.showYes = !!this.data.showYes;
 	}}
 
-	onYes() {
+	public onYes() {
 		if (this.dialogRef) {
 			this.dialogRef.close(true); 
 		} else {
@@ -38,7 +38,7 @@ export class PopupComponent {
 		}
 	}
 
-	onClose() {
+	public onClose() {
 		if (this.dialogRef) {
 			this.dialogRef.close(false); 
 		} else {

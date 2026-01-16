@@ -10,14 +10,14 @@ import { ActivatedRoute } from '@angular/router';
 
 export class DetailsComponent {
 
-	customer: any;
+	public customer: any;
 
 	constructor(
 		private route: ActivatedRoute,
 		private userService: UserService
 	) {}
 
-	ngOnInit(): void {
+	public ngOnInit(): void {
 		const id = Number(this.route.snapshot.paramMap.get('id'));
 		this.userService.getUserById(id).subscribe({
 			next: (res) => {

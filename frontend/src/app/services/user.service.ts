@@ -11,23 +11,23 @@ export class UserService {
 
 	constructor(private http: HttpClient) {}
 
-	registerUser(data: any): Observable<any> {
+	public registerUser(data: any): Observable<any> {
 		return this.http.post(`${this.baseUrl}/sign-up`, data);
 	}
 
-	signInUser(data: any): Observable<any> {
+	public signInUser(data: any): Observable<any> {
 		return this.http.post(`${this.baseUrl}/login`, data);
 	}
 
-	getUserById(id: number): Observable<any> {
+	public getUserById(id: number): Observable<any> {
 		return this.http.get(`${this.baseUrl}/${id}`);
 	}
 
-	updateUser(data: any): Observable<any> {
+	public updateUser(data: any): Observable<any> {
 		return this.http.put(`${this.baseUrl}`, data);
 	}
 
-	deleteUser(id: number): Observable<void> {
+	public deleteUser(id: number): Observable<void> {
 		return this.http.delete<void>(`${this.baseUrl}/${id}`);
 	}
 

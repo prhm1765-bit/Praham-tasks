@@ -9,15 +9,15 @@ import { UserService } from '../services/user.service';
 })
 
 export class NavComponent {
-	isNavOpen = false;
+	public isNavOpen = false;
 
 	constructor(private router: Router, private userService: UserService) {}
 
-	toggleNav() {
+	public toggleNav() {
 		this.isNavOpen = !this.isNavOpen;
 	}
 
-	goToDetails() {
+	public goToDetails() {
 		const token = localStorage.getItem('token');
 		if (!token) {
 			this.router.navigate(['/sign-in']);
@@ -28,12 +28,12 @@ export class NavComponent {
 		this.router.navigate(['/details', id]);
 	}
 
-	logout() {
+	public logout() {
 		localStorage.removeItem('token'); 
 		window.location.href = '/sign-in'; 
 	}
 
-	deleteAccount() {
+	public deleteAccount() {
 		if (!confirm('Are you sure you want to permanently delete your account?')) {
 		return;
 		}

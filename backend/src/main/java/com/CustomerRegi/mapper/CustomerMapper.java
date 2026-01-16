@@ -7,6 +7,8 @@ import com.CustomerRegi.model.Customer;
 import com.CustomerRegi.model.CustomerAddress;
 import org.mapstruct.*;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface CustomerMapper {
 
@@ -15,6 +17,10 @@ public interface CustomerMapper {
 	CustomerResDTO toDTO(Customer customer);
 
 	CustomerReportDTO toReportDTO(Customer customer);
+
+	List<CustomerReportDTO> toReportDTOList(List<Customer> customers);
+
+	List<CustomerResDTO> toDTOList(List<Customer> customers);
 
 	@AfterMapping
 	default void linkCustomer(@MappingTarget Customer customer) {

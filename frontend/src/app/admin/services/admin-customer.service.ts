@@ -12,11 +12,11 @@ export class AdminUserService {
 
 	constructor(private http: HttpClient) {}
 
-	getAllUsers(): Observable<any[]> {
+	public getAllUsers(): Observable<any[]> {
 		return this.http.get<any[]>(this.baseUrl);
 	}
 
-	deleteCustomer(id: number): Observable<void> {
+	public deleteCustomer(id: number): Observable<void> {
 		return this.http.delete<void>(`${this.baseUrl}/${id}`);
 	}
 
