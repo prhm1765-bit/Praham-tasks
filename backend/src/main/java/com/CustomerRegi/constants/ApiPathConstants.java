@@ -32,4 +32,7 @@ public final class ApiPathConstants {
 	// Path for Enums-AddressType
 	public static final String ADDRESSTYPE = "/address-types";
 
+	// Path for Tenant
+	public static final String TENANT = API + "/tenants";
+
 }

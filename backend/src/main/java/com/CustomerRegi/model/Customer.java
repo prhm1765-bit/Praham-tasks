@@ -64,6 +64,9 @@ public class Customer {
 	@NotEmpty(message = "Address cannot be null")
 	private List<CustomerAddress> address;
 
+	@Column(name = "tenant_id", nullable = false, updatable = false)
+	private String tenantId;
+
 	//Using JPA lifecycle methods to store proper values which will execute before saving and before updating
 	@PrePersist
 	@PreUpdate
@@ -104,11 +107,11 @@ public class Customer {
 		//Mobile number trim and no space
 		if (this.mobilenumber != null) {
 			this.mobilenumber = this.mobilenumber.trim();
-		}
-		if (this.mobilenumber.contains(" ")) {
-			throw new IllegalArgumentException(
+			if (this.mobilenumber.contains(" ")) {
+				throw new IllegalArgumentException(
 					"Mobile number should not contain spaces."
-			);
+				);
+			}
 		}
 	}
 

@@ -20,7 +20,10 @@ public class TenantDataSourceRegistry {
 	private String password;
 
 	public DataSource getDataSource(String tenantDbName) {
-		return dataSourceMap.computeIfAbsent(tenantDbName, this::createDataSource);
+		return dataSourceMap.computeIfAbsent(tenantDbName, dbName -> {
+			DataSource ds = createDataSource(dbName);
+			return ds;
+		});
 	}
 
 	private DataSource createDataSource(String dbName) {
@@ -37,4 +40,5 @@ public class TenantDataSourceRegistry {
 
 		return dataSource;
 	}
+
 }

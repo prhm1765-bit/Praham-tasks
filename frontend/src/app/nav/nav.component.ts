@@ -27,7 +27,7 @@ export class NavComponent {
 			return;
 		}
 		const payload = JSON.parse(atob(token.split('.')[1]));
-		const id = payload.id;
+		const id = payload.customerId;
 		this.router.navigate(['/details', id]);
 	}
 
@@ -47,7 +47,7 @@ export class NavComponent {
 		if (!token) return;
 
 		const payload = JSON.parse(atob(token.split('.')[1]));
-		const id = payload.id;
+		const id = payload.customerId;
 
 		this.userService.deleteUser(id).subscribe({
 			next: () => {

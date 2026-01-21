@@ -1,7 +1,10 @@
 package com.CustomerRegi.security;
 
 import com.CustomerRegi.model.Customer;
+import com.CustomerRegi.model.Tenant;
 import com.CustomerRegi.repository.CustomerRepo;
+import com.CustomerRegi.repository.TenantRepo;
+import com.CustomerRegi.tenant.TenantContext;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,44 +25,54 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final JwtService jwtService;
 	private final CustomerRepo customerRepo;
+	private final TenantRepo tenantRepo;
 
 	/**
-	 * @param request is all data which is sent by browser to server
-	 * @param response is all data which is sent by server to browser
+	 * @param request     is all data which is sent by browser to server
+	 * @param response    is all data which is sent by server to browser
 	 * @param filterChain moves the request forward after this check is completed
 	 * {@inheritDoc}
 	 * @return it is returning customer response DTO
-	 * */
+	 *
+	 */
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-	String authHeader = request.getHeader("Authorization");
+		String authHeader = request.getHeader("Authorization");
 
-	if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-		filterChain.doFilter(request, response);
-		return;
-	}
-
-	String jwt = authHeader.substring(7);
-	String email = jwtService.extractUsername(jwt);
-
-	if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-		Customer customer = customerRepo
-			.findByEmail(email)
-			.orElseThrow(() -> new RuntimeException("User not found"));
-
-		if (jwtService.isTokenValid(jwt, customer.getEmail())) {
-			String role = jwtService.extractRole(jwt);
-			List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
-
-			UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(customer, null, authorities);
-
-			authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-			SecurityContextHolder.getContext().setAuthentication(authToken);
+		if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+			filterChain.doFilter(request, response);
+			return;
 		}
-	}
-	filterChain.doFilter(request, response);
+
+		String jwt = authHeader.substring(7);
+
+		try {
+			String email = jwtService.extractUsername(jwt);
+			String tenantId = jwtService.extractTenantId(jwt); // MUST EXIST
+
+			if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+				//TenantContext.clear();
+				Tenant tenant = tenantRepo.findByEmail(email)
+						.orElseThrow(() -> new RuntimeException("Tenant not found"));
+
+				if (jwtService.isTokenValid(jwt, tenant.getEmail())) {
+					TenantContext.setTenant(tenantId);
+					Customer customer = customerRepo.findByEmail(email)
+						.orElseThrow(() -> new RuntimeException("Customer not found"));
+					String role = jwtService.extractRole(jwt);
+					List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
+					UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(customer, null, authorities);
+					authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+					SecurityContextHolder.getContext().setAuthentication(authToken);
+				}
+			}
+			filterChain.doFilter(request, response);
+		} finally {
+			// prevent tenant leakage
+			TenantContext.clear();
+		}
 	}
 
 }
-

@@ -4,6 +4,7 @@ import com.CustomerRegi.dto.CustomerReqDTO;
 import com.CustomerRegi.dto.CustomerResDTO;
 import com.CustomerRegi.enums.Role;
 import com.CustomerRegi.model.Customer;
+import com.CustomerRegi.repository.CustomerRepo;
 import com.CustomerRegi.security.SecurityUtils;
 import com.CustomerRegi.service.CustomerRegistrationService;
 import com.CustomerRegi.validation.OnCreate;
@@ -24,6 +25,7 @@ import static com.CustomerRegi.constants.ApiPathConstants.SIGNUP;
 public class CustomerRegistrationController {
 
 	private final CustomerRegistrationService customerRegistrationService;
+	private final CustomerRepo customerRepo;
 
 	@PostMapping(SIGNUP)
 	public ResponseEntity<CustomerResDTO> save(@Validated(OnCreate.class) @RequestBody CustomerReqDTO customerReqDTO) {
@@ -40,6 +42,8 @@ public class CustomerRegistrationController {
 	@GetMapping("/{id}")
 	public ResponseEntity<CustomerResDTO> getById(@PathVariable int id) {
 		Customer loggedIn = SecurityUtils.currentCustomer();
+		Customer tenantTableCustomer = customerRepo.findById(id)
+				.orElseThrow(() -> new RuntimeException("Customer not found by id"));
 
 		// Admin can see details of customers
 		if (loggedIn.getRole() == Role.ADMIN) {
@@ -47,7 +51,7 @@ public class CustomerRegistrationController {
 		}
 
 		// customer can see only their details
-		if (!loggedIn.getId().equals(id)) {
+		if (!loggedIn.getEmail().equals(tenantTableCustomer.getEmail())) {
 			throw new AccessDeniedException(
 					"You are not allowed to view another person's profile."
 			);
@@ -58,14 +62,15 @@ public class CustomerRegistrationController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable int id) {
 		Customer loggedIn = SecurityUtils.currentCustomer();
-
+		Customer tenantTableCustomer = customerRepo.findById(id)
+				.orElseThrow(() -> new RuntimeException("Customer not found by id in delate"));
 		//restricting admin to delete admin accounts
 		if (loggedIn.getRole() == Role.ADMIN && loggedIn.getId().equals(id)) {
 			throw new AccessDeniedException("Admin account cannot be deleted.");
 		}
 
 		// Customer can delete only his own account
-		if (loggedIn.getRole() == Role.CUSTOMER && !loggedIn.getId().equals(id)) {
+		if (loggedIn.getRole() == Role.CUSTOMER && !loggedIn.getEmail().equals(tenantTableCustomer.getEmail())) {
 			throw new AccessDeniedException("You are not allowed to delete another person's account.");
 		}
 		customerRegistrationService.delete(id);
@@ -75,6 +80,8 @@ public class CustomerRegistrationController {
 	@PutMapping
 	public ResponseEntity<CustomerResDTO> edit(@Validated(OnUpdate.class) @RequestBody CustomerReqDTO dto) {
 		Customer loggedIn = SecurityUtils.currentCustomer();
+		Customer tenantTableCustomer = customerRepo.findById(dto.getId())
+				.orElseThrow(() -> new RuntimeException("Customer not found by id in edit"));
 
 		// Admin is not allowed to update customer details
 		if (loggedIn.getRole() == Role.ADMIN) {
@@ -82,7 +89,7 @@ public class CustomerRegistrationController {
 		}
 
 		// Customer can update only his own profile
-		if (!loggedIn.getId().equals(dto.getId())) {
+		if (!loggedIn.getEmail().equals(tenantTableCustomer.getEmail())) {
 			throw new AccessDeniedException("You can update only your own profile.");
 		}
 		return ResponseEntity.ok(customerRegistrationService.saveOrUpdate(dto));
