@@ -5,6 +5,7 @@ import com.CustomerRegi.dto.CustomerResDTO;
 import com.CustomerRegi.enums.Role;
 import com.CustomerRegi.exception.EmailAlreadyExistsException;
 import com.CustomerRegi.mapper.CustomerMapper;
+import com.CustomerRegi.mapper.TenantMapper;
 import com.CustomerRegi.model.Customer;
 import com.CustomerRegi.model.Tenant;
 import com.CustomerRegi.repository.CustomerRepo;
@@ -31,7 +32,8 @@ public class CustomerRegistrationServiceImpl implements CustomerRegistrationServ
 	private final TenantProvisioningService tenantProvisioningService;
 	private final TenantRepo tenantRepo;
 	private final ApplicationContext applicationContext;
-
+	private final TenantMapper tenantMapper;
+	private final TenantService tenantService;
 
 	/**
 	 * @param dto is Customer Request DTO
@@ -40,6 +42,10 @@ public class CustomerRegistrationServiceImpl implements CustomerRegistrationServ
 	 * */
 	@Override
 	public CustomerResDTO saveOrUpdate(CustomerReqDTO dto) {
+
+//		if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+//			dto.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
+//		}
 
 		Customer customer = customerMapper.toEntity(dto);
 
@@ -54,6 +60,10 @@ public class CustomerRegistrationServiceImpl implements CustomerRegistrationServ
 
 			TenantContext.setTenant(tenantId);
 			try {
+				//To store password in database in hash encoded form
+				if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+					customer.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
+				}
 				Customer saved = customerRepo.save(customer);
 				return customerMapper.toDTO(saved);
 			} finally {
@@ -62,17 +72,26 @@ public class CustomerRegistrationServiceImpl implements CustomerRegistrationServ
 			}
 		}
 
-		//To store password in database in hash encoded form
-		if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
-			customer.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
-		}
+
+
 		//To check email exist or not while registering and while updating
-		if ( dto.getId() == null && customerRepo.existsByEmailAndIdNot(dto.getEmail(), dto.getId()) ||
-			dto.getId() != null && customerRepo.existsByEmailAndIdNot(dto.getEmail(), dto.getId())) {
-				throw new EmailAlreadyExistsException("Email already exists");
-		}
+//		if ( dto.getId() == null && customerRepo.existsByEmailAndIdNot(dto.getEmail(), dto.getId()) ||
+//			dto.getId() != null && customerRepo.existsByEmailAndIdNot(dto.getEmail(), dto.getId())) {
+//				throw new EmailAlreadyExistsException("Email already exists");
+//		}
+		Customer existingCustomer = customerRepo.findById(dto.getId()).orElseThrow(() -> new RuntimeException("Customer not found.."));
+		boolean emailChanged = !existingCustomer.getEmail().equals(dto.getEmail());
+
+		String tenantId = existingCustomer.getTenantId();
+		customer.setTenantId(tenantId);
 		Customer saved = customerRepo.save(customer);
-		return customerMapper.toDTO(saved);
+		TenantContext.clear();
+		tenantService.updateTenantFromCustomer(saved, tenantId);
+
+		CustomerResDTO response = customerMapper.toDTO(saved);
+		response.setReLoginRequired(emailChanged);
+		return response;
+
 	}
 
 	/**
@@ -82,22 +101,6 @@ public class CustomerRegistrationServiceImpl implements CustomerRegistrationServ
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED)
 	public List<CustomerResDTO> findAll() {
-//		List<Customer> customers = customerRepo.findAll();
-//		List<CustomerResDTO> customerResDTOS = customerMapper.toDTOList(customers);
-//		return customerResDTOS;
-
-
-//		List<CustomerResDTO> result = new ArrayList<>();
-//		// MASTER DB
-//		TenantContext.clear();
-//		List<Tenant> tenants = tenantRepo.findAll();
-//		CustomerRegistrationServiceImpl proxy = applicationContext.getBean(CustomerRegistrationServiceImpl.class);
-//		for (Tenant tenant : tenants) {
-//			result.addAll(proxy.fetchCustomersFromTenant(tenant.getTenantId()));
-//		}
-//		return result;
-
-
 		// Global uniqueness by email
 		Map<String, CustomerResDTO> uniqueByEmail = new LinkedHashMap<>();
 
@@ -109,33 +112,29 @@ public class CustomerRegistrationServiceImpl implements CustomerRegistrationServ
 				applicationContext.getBean(CustomerRegistrationServiceImpl.class);
 
 		for (Tenant tenant : tenants) {
+			TenantContext.setTenant(tenant.getTenantId());
 			List<CustomerResDTO> tenantCustomers =
-					proxy.fetchCustomersFromTenant(tenant.getTenantId());
+					proxy.fetchCustomersFromTenant();
+			try {
+				for (CustomerResDTO dto : tenantCustomers) {
+					// OPTION 2: global uniqueness rule
 
-			for (CustomerResDTO dto : tenantCustomers) {
-				// OPTION 2: global uniqueness rule
-				uniqueByEmail.putIfAbsent(dto.getEmail(), dto);
+					uniqueByEmail.putIfAbsent(dto.getEmail(), dto);
+				}
+			} finally {
+				TenantContext.clear();
 			}
 		}
-
 		return new ArrayList<>(uniqueByEmail.values());
 	}
 
 	@Transactional(
 			propagation = Propagation.REQUIRES_NEW
-
 	)
-	protected List<CustomerResDTO> fetchCustomersFromTenant(String tenantId) {
-
-		TenantContext.setTenant(tenantId);
-		try {
+	protected List<CustomerResDTO> fetchCustomersFromTenant() {
 			List<Customer> customers = customerRepo.findAll();
 			return customerMapper.toDTOList(customers);
-		} finally {
-			TenantContext.clear();
-		}
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -153,7 +152,19 @@ public class CustomerRegistrationServiceImpl implements CustomerRegistrationServ
 	 * */
 	@Override
 	public void delete(int id) {
-		customerRepo.deleteById(id);
+		Customer customer = customerRepo.findById(id)
+				.orElseThrow(() -> new RuntimeException("Customer not found"));
+
+		String tenantId = customer.getTenantId();
+
+		// Delete customer row (tenant DB)
+		customerRepo.delete(customer);
+
+		//  Clear tenant context → switch to MASTER DB
+		TenantContext.clear();
+
+		// Delete tenant metadata + database
+		tenantProvisioningService.deleteTenantDatabase(tenantId);
 	}
 
 }

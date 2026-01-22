@@ -52,15 +52,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			String tenantId = jwtService.extractTenantId(jwt); // MUST EXIST
 
 			if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
 				//TenantContext.clear();
-				Tenant tenant = tenantRepo.findByEmail(email)
-						.orElseThrow(() -> new RuntimeException("Tenant not found"));
-
+				Tenant tenant = tenantRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("Tenant not found"));
 				if (jwtService.isTokenValid(jwt, tenant.getEmail())) {
 					TenantContext.setTenant(tenantId);
-					Customer customer = customerRepo.findByEmail(email)
-						.orElseThrow(() -> new RuntimeException("Customer not found"));
+					Customer customer = customerRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("Customer not found"));
 					String role = jwtService.extractRole(jwt);
 					List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
 					UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(customer, null, authorities);

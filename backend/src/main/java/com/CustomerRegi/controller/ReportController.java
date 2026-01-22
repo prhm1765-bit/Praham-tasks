@@ -1,6 +1,5 @@
 package com.CustomerRegi.controller;
 
-import com.CustomerRegi.mapper.CustomerMapper;
 import com.CustomerRegi.service.ReportService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -9,8 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 import static com.CustomerRegi.constants.ApiPathConstants.CUSTOMERDATA;
 import static com.CustomerRegi.constants.ApiPathConstants.REPORTS;

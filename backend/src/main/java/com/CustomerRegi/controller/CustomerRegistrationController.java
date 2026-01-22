@@ -44,17 +44,14 @@ public class CustomerRegistrationController {
 		Customer loggedIn = SecurityUtils.currentCustomer();
 		Customer tenantTableCustomer = customerRepo.findById(id)
 				.orElseThrow(() -> new RuntimeException("Customer not found by id"));
-
-		// Admin can see details of customers
+		// Admin can see list of customers
 		if (loggedIn.getRole() == Role.ADMIN) {
 			return ResponseEntity.ok(customerRegistrationService.getById(id));
 		}
 
 		// customer can see only their details
 		if (!loggedIn.getEmail().equals(tenantTableCustomer.getEmail())) {
-			throw new AccessDeniedException(
-					"You are not allowed to view another person's profile."
-			);
+			throw new AccessDeniedException("You are not allowed to view another person's profile.");
 		}
 		return ResponseEntity.ok(customerRegistrationService.getById(id));
 	}
@@ -62,13 +59,7 @@ public class CustomerRegistrationController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable int id) {
 		Customer loggedIn = SecurityUtils.currentCustomer();
-		Customer tenantTableCustomer = customerRepo.findById(id)
-				.orElseThrow(() -> new RuntimeException("Customer not found by id in delate"));
-		//restricting admin to delete admin accounts
-		if (loggedIn.getRole() == Role.ADMIN && loggedIn.getId().equals(id)) {
-			throw new AccessDeniedException("Admin account cannot be deleted.");
-		}
-
+		Customer tenantTableCustomer = customerRepo.findById(id).orElseThrow(() -> new RuntimeException("Customer not found by id in delate"));
 		// Customer can delete only his own account
 		if (loggedIn.getRole() == Role.CUSTOMER && !loggedIn.getEmail().equals(tenantTableCustomer.getEmail())) {
 			throw new AccessDeniedException("You are not allowed to delete another person's account.");
@@ -80,14 +71,11 @@ public class CustomerRegistrationController {
 	@PutMapping
 	public ResponseEntity<CustomerResDTO> edit(@Validated(OnUpdate.class) @RequestBody CustomerReqDTO dto) {
 		Customer loggedIn = SecurityUtils.currentCustomer();
-		Customer tenantTableCustomer = customerRepo.findById(dto.getId())
-				.orElseThrow(() -> new RuntimeException("Customer not found by id in edit"));
-
+		Customer tenantTableCustomer = customerRepo.findById(dto.getId()).orElseThrow(() -> new RuntimeException("Customer not found by id in edit"));
 		// Admin is not allowed to update customer details
 		if (loggedIn.getRole() == Role.ADMIN) {
 			throw new AccessDeniedException("Admins are not allowed to edit customer profiles.");
 		}
-
 		// Customer can update only his own profile
 		if (!loggedIn.getEmail().equals(tenantTableCustomer.getEmail())) {
 			throw new AccessDeniedException("You can update only your own profile.");

@@ -11,6 +11,4 @@ public interface TenantRepo extends JpaRepository<Tenant, Long> {
 
 	Optional<Tenant> findByEmail(String email);
 
-	boolean existsByEmail(String email);
-
 }

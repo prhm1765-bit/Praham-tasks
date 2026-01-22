@@ -13,7 +13,6 @@ export class SignUpComponent {
 
 	public signUpForm!: FormGroup;
 	public isEditMode = false;
-	private customerId!: number;
 
 	constructor(
 		private fb : FormBuilder,
@@ -121,6 +120,14 @@ export class SignUpComponent {
 		if (payload.id) {
 			this.userService.updateUser(payload).subscribe({
 				next: (res) => {
+					if (res.reLoginRequired) {
+				alert('Email changed. Please log in again.');
+
+				localStorage.removeItem('token');
+
+				this.router.navigate(['/sign-in']);
+				return;
+			}
 					console.log('User Updated', res);
 					alert('Update successful!');
 					this.router.navigate(['/details', payload.id]);

@@ -18,31 +18,14 @@ public class TenantRoutingDataSource extends AbstractRoutingDataSource {
 	@Override
 	protected DataSource determineTargetDataSource() {
 		String tenantId = (String) determineCurrentLookupKey();
-
-		// No tenant → use MASTER DB
+		// No tenant then use MASTER DB
 		if (tenantId == null) {
 			return masterDataSource;
 		}
-
 		// tenant DB
 		return registry.getDataSource("tenant_" + tenantId);
 	}
 
 }
-
-
-
-//	@Override
-//	protected DataSource determineTargetDataSource() {
-//
-//		String tenantId = TenantContext.getTenant();
-//
-//		if (tenantId == null) {
-//			throw new IllegalStateException("No tenant set in TenantContext");
-//		}
-//
-//		// tenantId == dbName in your design
-//		return TenantDataSourceHolder.getDataSource(tenantId);
-//	}
 
 
