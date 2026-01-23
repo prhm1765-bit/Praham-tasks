@@ -22,36 +22,19 @@ public class AuthSeriveImpl implements AuthService {
 
 	/**
 	 * @param loginRequestDTO is Customer LogIn Request DTO
-	 *                        {@inheritDoc}
+	 * {@inheritDoc}
 	 * @return it is returning JWT token as String
 	 *
 	 */
 	public String login(LoginRequestDTO loginRequestDTO) {
-
-
-		Tenant tenant = tenantRepo.findByEmail(loginRequestDTO.getEmail())
-				.orElseThrow(() -> new RuntimeException("User Tenant not found"));
-
+		Tenant tenant = tenantRepo.findByEmail(loginRequestDTO.getEmail()).orElseThrow(() -> new RuntimeException("User Tenant not found"));
 		if (!passwordEncoder.matches(loginRequestDTO.getPassword(), tenant.getPassword())) {
 			throw new RuntimeException("Invalid credentials");
 		}
-		//Customer customer = customerRepo.findByEmail(loginRequestDTO.getEmail())
-		//.orElseThrow(() -> new RuntimeException("User not found"));
-		//return jwtService.generateToken(tenant.getEmail(), tenant.getRole().name(), tenant.getId(), tenant.getTenantId(), customer.getId() );
-
-
 		TenantContext.setTenant(tenant.getTenantId());
 		try {
-			Customer customer = customerRepo.findByEmail(loginRequestDTO.getEmail())
-					.orElseThrow(() -> new RuntimeException("User not found"));
-
-			return jwtService.generateToken(
-					tenant.getEmail(),
-					tenant.getRole().name(),
-					tenant.getId(),
-					tenant.getTenantId(),
-					customer.getId()
-			);
+			Customer customer = customerRepo.findByEmail(loginRequestDTO.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
+			return jwtService.generateToken(tenant.getEmail(), tenant.getRole().name(), tenant.getId(), tenant.getTenantId(), customer.getId());
 		} finally {
 			TenantContext.clear();
 		}

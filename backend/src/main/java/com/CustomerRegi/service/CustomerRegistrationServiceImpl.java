@@ -43,21 +43,14 @@ public class CustomerRegistrationServiceImpl implements CustomerRegistrationServ
 	@Override
 	public CustomerResDTO saveOrUpdate(CustomerReqDTO dto) {
 
-//		if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
-//			dto.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
-//		}
-
 		Customer customer = customerMapper.toEntity(dto);
-
 		if (customer.getId() == null) {
 			customer.setRole(Role.CUSTOMER);
-
 			String tenantId = UUID.randomUUID().toString().replace("-", "");
 			// Create tenant database + metadata
 			tenantProvisioningService.registerTenant(tenantId, dto.getEmail(), dto.getPassword());
 			// Assign tenantId to customer
 			customer.setTenantId(tenantId);
-
 			TenantContext.setTenant(tenantId);
 			try {
 				//To store password in database in hash encoded form
@@ -71,27 +64,16 @@ public class CustomerRegistrationServiceImpl implements CustomerRegistrationServ
 				TenantContext.clear();
 			}
 		}
-
-
-
-		//To check email exist or not while registering and while updating
-//		if ( dto.getId() == null && customerRepo.existsByEmailAndIdNot(dto.getEmail(), dto.getId()) ||
-//			dto.getId() != null && customerRepo.existsByEmailAndIdNot(dto.getEmail(), dto.getId())) {
-//				throw new EmailAlreadyExistsException("Email already exists");
-//		}
 		Customer existingCustomer = customerRepo.findById(dto.getId()).orElseThrow(() -> new RuntimeException("Customer not found.."));
 		boolean emailChanged = !existingCustomer.getEmail().equals(dto.getEmail());
-
 		String tenantId = existingCustomer.getTenantId();
 		customer.setTenantId(tenantId);
 		Customer saved = customerRepo.save(customer);
 		TenantContext.clear();
 		tenantService.updateTenantFromCustomer(saved, tenantId);
-
 		CustomerResDTO response = customerMapper.toDTO(saved);
 		response.setReLoginRequired(emailChanged);
 		return response;
-
 	}
 
 	/**
@@ -128,9 +110,7 @@ public class CustomerRegistrationServiceImpl implements CustomerRegistrationServ
 		return new ArrayList<>(uniqueByEmail.values());
 	}
 
-	@Transactional(
-			propagation = Propagation.REQUIRES_NEW
-	)
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	protected List<CustomerResDTO> fetchCustomersFromTenant() {
 			List<Customer> customers = customerRepo.findAll();
 			return customerMapper.toDTOList(customers);
@@ -152,17 +132,12 @@ public class CustomerRegistrationServiceImpl implements CustomerRegistrationServ
 	 * */
 	@Override
 	public void delete(int id) {
-		Customer customer = customerRepo.findById(id)
-				.orElseThrow(() -> new RuntimeException("Customer not found"));
-
+		Customer customer = customerRepo.findById(id).orElseThrow(() -> new RuntimeException("Customer not found"));
 		String tenantId = customer.getTenantId();
-
 		// Delete customer row (tenant DB)
 		customerRepo.delete(customer);
-
 		//  Clear tenant context → switch to MASTER DB
 		TenantContext.clear();
-
 		// Delete tenant metadata + database
 		tenantProvisioningService.deleteTenantDatabase(tenantId);
 	}

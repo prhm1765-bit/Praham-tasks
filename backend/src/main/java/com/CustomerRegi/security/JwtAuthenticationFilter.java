@@ -19,6 +19,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 
+
+/**
+ * This filter runs once for every request.It validates JWT, sets authentication, and also sets tenant id for database routing.
+ */
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -39,20 +43,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
 		String authHeader = request.getHeader("Authorization");
-
+		// If token is missing or invalid format, skip authentication
 		if (authHeader == null || !authHeader.startsWith("Bearer ")) {
 			filterChain.doFilter(request, response);
 			return;
 		}
-
+		// Remove "Bearer " prefix to get actual JWT
 		String jwt = authHeader.substring(7);
-
 		try {
 			String email = jwtService.extractUsername(jwt);
-			String tenantId = jwtService.extractTenantId(jwt); // MUST EXIST
-
+			String tenantId = jwtService.extractTenantId(jwt);
 			if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-				//TenantContext.clear();
 				Tenant tenant = tenantRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("Tenant not found"));
 				if (jwtService.isTokenValid(jwt, tenant.getEmail())) {
 					TenantContext.setTenant(tenantId);
@@ -66,7 +67,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			}
 			filterChain.doFilter(request, response);
 		} finally {
-			// prevent tenant leakage
+			// Always clear tenant context after request is done. This prevents tenant data leaking to next request
 			TenantContext.clear();
 		}
 	}
