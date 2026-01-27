@@ -42,13 +42,11 @@ public class CustomerRegistrationController {
 	@GetMapping("/{id}")
 	public ResponseEntity<CustomerResDTO> getById(@PathVariable int id) {
 		Customer loggedIn = SecurityUtils.currentCustomer();
-		Customer tenantTableCustomer = customerRepo.findById(id)
-				.orElseThrow(() -> new RuntimeException("Customer not found by id"));
+		Customer tenantTableCustomer = customerRepo.findById(id).orElseThrow(() -> new RuntimeException("Customer not found by id"));
 		// Admin can see list of customers
 		if (loggedIn.getRole() == Role.ADMIN) {
 			return ResponseEntity.ok(customerRegistrationService.getById(id));
 		}
-
 		// customer can see only their details
 		if (!loggedIn.getEmail().equals(tenantTableCustomer.getEmail())) {
 			throw new AccessDeniedException("You are not allowed to view another person's profile.");

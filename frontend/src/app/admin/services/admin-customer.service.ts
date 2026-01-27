@@ -16,4 +16,8 @@ export class AdminUserService {
 		return this.http.get<any[]>(this.baseUrl);
 	}
 
+	public allUserReports(): Observable<Blob> {
+		return this.http.get(`http://localhost:8080/api/reports/customer-data`, { responseType: 'blob' });
+	}
+
 }

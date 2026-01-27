@@ -9,6 +9,10 @@ public interface TenantRepo extends JpaRepository<Tenant, Long> {
 
 	Optional<Tenant> findByTenantId(String tenantId);
 
+<<<<<<< Updated upstream
 	Optional<Tenant> findByEmail(String email);
+=======
+	Optional<Tenant> findByCompanyCode(String companyCode);
+>>>>>>> Stashed changes
 
 }

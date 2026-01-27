@@ -29,7 +29,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final JwtService jwtService;
 	private final CustomerRepo customerRepo;
+<<<<<<< Updated upstream
 	private final TenantRepo tenantRepo;
+=======
+>>>>>>> Stashed changes
 
 	/**
 	 * @param request     is all data which is sent by browser to server
@@ -37,7 +40,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	 * @param filterChain moves the request forward after this check is completed
 	 * {@inheritDoc}
 	 * @return it is returning customer response DTO
-	 *
 	 */
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -54,9 +56,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			String email = jwtService.extractUsername(jwt);
 			String tenantId = jwtService.extractTenantId(jwt);
 			if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+<<<<<<< Updated upstream
 				Tenant tenant = tenantRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("Tenant not found"));
 				if (jwtService.isTokenValid(jwt, tenant.getEmail())) {
 					TenantContext.setTenant(tenantId);
+=======
+				if (jwtService.isTokenValid(jwt,email)) {
+>>>>>>> Stashed changes
 					Customer customer = customerRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("Customer not found"));
 					String role = jwtService.extractRole(jwt);
 					List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));

@@ -19,14 +19,9 @@ public class TenantService {
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void updateTenantFromCustomer(Customer saved, String tenantId) {
-
 		TenantContext.clear(); // MASTER DB only
-
-		Tenant tenant = tenantRepo.findByTenantId(tenantId)
-				.orElseThrow(() -> new RuntimeException("Tenant not found"));
-
+		Tenant tenant = tenantRepo.findByTenantId(tenantId).orElseThrow(() -> new RuntimeException("Tenant not found"));
 		tenantMapper.updateTenantFromCustomer(saved, tenant);
-
 		tenantRepo.save(tenant);
 	}
 }

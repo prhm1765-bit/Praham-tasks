@@ -1,6 +1,7 @@
 package com.CustomerRegi.controller;
 
 import com.CustomerRegi.service.ReportService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +14,11 @@ import static com.CustomerRegi.constants.ApiPathConstants.CUSTOMERDATA;
 import static com.CustomerRegi.constants.ApiPathConstants.REPORTS;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(REPORTS)
 public class ReportController {
 
 	private final ReportService reportService;
-
-	public ReportController(ReportService reportService) {
-		this.reportService = reportService;
-	}
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(CUSTOMERDATA)

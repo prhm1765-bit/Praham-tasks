@@ -18,7 +18,7 @@ public interface CustomerMapper {
 
 	CustomerReportDTO toReportDTO(Customer customer);
 
-	List<CustomerReportDTO> toReportDTOList(List<Customer> customers);
+	List<CustomerReportDTO> toReportDTOList(List<CustomerResDTO> customers);
 
 	List<CustomerResDTO> toDTOList(List<Customer> customers);
 

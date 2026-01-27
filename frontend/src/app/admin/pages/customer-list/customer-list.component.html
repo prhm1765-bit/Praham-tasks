@@ -3,6 +3,7 @@
 		<h2>Customers</h2>
 		<button (click)="logout()">Log out</button>
 		<p class="subtitle">Manage registered customers</p>
+		<button class="download-btn" (click)="generateReport()">Download PDF Report</button>
 		<p *ngIf="loading" class="loading-text">Loading customers...</p>
 
 		<!-- Header -->

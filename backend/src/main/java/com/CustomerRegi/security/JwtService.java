@@ -23,10 +23,9 @@ public class JwtService {
 	 * Method for generating token
 	 * @param email is Customer's email
 	 * @param role is Customer's role-either admin or customer
-	 * @param id is Customer's id
 	 * @return token as string
 	 * */
-	public String generateToken(String email, String role, long id, String tenantId, int customerId) {
+	public String generateToken(String email, String role, String tenantId, int customerId) {
 		return Jwts.builder()
 			.setSubject(email)
 			.claim("role", role)

@@ -38,6 +38,7 @@ export class SignUpComponent {
 			mobilenumber: null,
 			email: null,
 			password: null,
+			companyCode: null, 
 			address: [{ address: null, addresstype: null }]
 		};
 
@@ -75,6 +76,7 @@ export class SignUpComponent {
 				dob: [model.dob, [Validators.required]],
 				mobilenumber: [model.mobilenumber, [Validators.required]],
 				email: [model.email, [Validators.required, Validators.email]],
+				companyCode: [model.companyCode, [Validators.required]],
 				password: [''],
 				address: this.fb.array(
 					model.address.map((a: any) =>

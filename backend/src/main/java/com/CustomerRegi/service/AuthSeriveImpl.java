@@ -34,7 +34,14 @@ public class AuthSeriveImpl implements AuthService {
 		TenantContext.setTenant(tenant.getTenantId());
 		try {
 			Customer customer = customerRepo.findByEmail(loginRequestDTO.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
+<<<<<<< Updated upstream
 			return jwtService.generateToken(tenant.getEmail(), tenant.getRole().name(), tenant.getId(), tenant.getTenantId(), customer.getId());
+=======
+			if (!passwordEncoder.matches(loginRequestDTO.getPassword(), customer.getPassword())) {
+				throw new RuntimeException("Invalid credentials");
+			}
+			return jwtService.generateToken(customer.getEmail(), customer.getRole().name(), tenant.getTenantId(), customer.getId());
+>>>>>>> Stashed changes
 		} finally {
 			TenantContext.clear();
 		}

@@ -35,6 +35,22 @@ export class CustomerListComponent implements OnInit {
 		});
 	}
 
+	public generateReport(): void {
+		this.adminUserService.allUserReports().subscribe({
+			next: (blob) => {
+				const url = window.URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = 'all-customers.pdf';
+				a.click();
+				window.URL.revokeObjectURL(url);
+			},
+			error: () => {
+				alert('Failed to download report');
+			}
+		});
+	}
+
 	public logout() {
 		localStorage.removeItem('token'); 
 		window.location.href = '/sign-in'; 
