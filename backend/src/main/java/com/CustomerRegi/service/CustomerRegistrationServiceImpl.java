@@ -36,42 +36,6 @@ public class CustomerRegistrationServiceImpl implements CustomerRegistrationServ
 	 * {@inheritDoc}
 	 * @return it is returning customer response DTO
 	 * */
-//	@Override
-//	public CustomerResDTO saveOrUpdate(CustomerReqDTO dto) {
-//
-//		Customer customer = customerMapper.toEntity(dto);
-//		if (customer.getId() == null) {
-//			customer.setRole(Role.CUSTOMER);
-//			String tenantId = UUID.randomUUID().toString().replace("-", "");
-//			// Create tenant database + metadata
-//			tenantProvisioningService.registerTenant(tenantId, dto.getCompanyCode());
-//			// Assign tenantId to customer
-//			customer.setTenantId(tenantId);
-//			TenantContext.setTenant(tenantId);
-//			try {
-//				//To store password in database in hash encoded form
-//				if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
-//					customer.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
-//				}
-//				Customer saved = customerRepo.save(customer);
-//				return customerMapper.toDTO(saved);
-//			} finally {
-//				//  IMPORTANT: clear after DB operation
-//				TenantContext.clear();
-//			}
-//		}
-//		Customer existingCustomer = customerRepo.findById(dto.getId()).orElseThrow(() -> new RuntimeException("Customer not found.."));
-//		boolean emailChanged = !existingCustomer.getEmail().equals(dto.getEmail());
-//		String tenantId = existingCustomer.getTenantId();
-//		customer.setTenantId(tenantId);
-//		Customer saved = customerRepo.save(customer);
-//		TenantContext.clear();
-//		tenantService.updateTenantFromCustomer(saved, tenantId);
-//		CustomerResDTO response = customerMapper.toDTO(saved);
-//		response.setReLoginRequired(emailChanged);
-//		return response;
-//	}
-
 	@Override
 	public CustomerResDTO saveOrUpdate(CustomerReqDTO dto) {
 
