@@ -80,14 +80,9 @@ public class CustomerRegistrationServiceImpl implements CustomerRegistrationServ
 			customer.setRole(Role.CUSTOMER);
 			String tenantId = UUID.randomUUID().toString().replace("-", "");
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
 			// Create tenant database + metadata
 			tenantProvisioningService.registerTenant(tenantId, dto.getEmail(), dto.getPassword());
 			// Assign tenantId to customer
-=======
-			TenantContext.clear();
-			tenantProvisioningService.registerTenant(tenantId, dto.getCompanyCode());
->>>>>>> Stashed changes
 =======
 			TenantContext.clear();
 			tenantProvisioningService.registerTenant(tenantId, dto.getCompanyCode());
