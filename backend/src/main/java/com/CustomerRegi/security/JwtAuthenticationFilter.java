@@ -30,7 +30,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private final JwtService jwtService;
 	private final CustomerRepo customerRepo;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	private final TenantRepo tenantRepo;
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 
@@ -57,10 +60,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			String tenantId = jwtService.extractTenantId(jwt);
 			if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 				Tenant tenant = tenantRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("Tenant not found"));
 				if (jwtService.isTokenValid(jwt, tenant.getEmail())) {
 					TenantContext.setTenant(tenantId);
 =======
+=======
+>>>>>>> Stashed changes
 				if (jwtService.isTokenValid(jwt,email)) {
 >>>>>>> Stashed changes
 					Customer customer = customerRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("Customer not found"));

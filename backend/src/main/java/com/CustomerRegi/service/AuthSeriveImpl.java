@@ -41,6 +41,9 @@ public class AuthSeriveImpl implements AuthService {
 				throw new RuntimeException("Invalid credentials");
 			}
 			return jwtService.generateToken(customer.getEmail(), customer.getRole().name(), tenant.getTenantId(), customer.getId());
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 		} finally {
 			TenantContext.clear();

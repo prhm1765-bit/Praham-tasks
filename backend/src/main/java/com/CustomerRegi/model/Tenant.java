@@ -28,6 +28,7 @@ public class Tenant {
 	private String status;
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	@Column(name = "password", updatable = false,length = 100)
 	private String password;
 
@@ -36,6 +37,8 @@ public class Tenant {
 	@NotBlank(message = "Email cannot be null")
 	private String email;
 =======
+=======
+>>>>>>> Stashed changes
 	@Column(name = "comapny_code", unique = true, updatable = false)
 	private String companyCode;
 >>>>>>> Stashed changes
