@@ -16,8 +16,8 @@ export class AdminUserService {
 		return this.http.get<any[]>(this.baseUrl);
 	}
 
-	public deleteCustomer(id: number): Observable<void> {
-		return this.http.delete<void>(`${this.baseUrl}/${id}`);
+	public allUserReports(): Observable<Blob> {
+		return this.http.get(`http://localhost:8080/api/reports/customer-data`, { responseType: 'blob' });
 	}
 
 }

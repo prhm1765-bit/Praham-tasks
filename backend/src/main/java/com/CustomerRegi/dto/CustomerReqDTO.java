@@ -43,6 +43,8 @@ public class CustomerReqDTO {
 	@NotBlank(groups = OnCreate.class, message = "password can not be null")
 	private String password;
 
+	private String companyCode;
+
 	@Email
 	@NotBlank(message = "Email cannot be null")
 	private String email;

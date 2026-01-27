@@ -63,3 +63,11 @@ import { MatDialogModule } from '@angular/material/dialog';
 })
 
 export class AppModule { }
+
+/*
+ * AppModule
+ * Central place where application pieces are declared and imported.
+ * - Declarations: components and directives used in templates
+ * - Imports: feature modules and Angular Material modules
+ * - Providers: application-wide services (AuthInterceptor is registered here)
+ */

@@ -13,7 +13,6 @@ export class SignUpComponent {
 
 	public signUpForm!: FormGroup;
 	public isEditMode = false;
-	private customerId!: number;
 
 	constructor(
 		private fb : FormBuilder,
@@ -39,6 +38,7 @@ export class SignUpComponent {
 			mobilenumber: null,
 			email: null,
 			password: null,
+			companyCode: null, 
 			address: [{ address: null, addresstype: null }]
 		};
 
@@ -76,6 +76,7 @@ export class SignUpComponent {
 				dob: [model.dob, [Validators.required]],
 				mobilenumber: [model.mobilenumber, [Validators.required]],
 				email: [model.email, [Validators.required, Validators.email]],
+				companyCode: [model.companyCode, [Validators.required]],
 				password: [''],
 				address: this.fb.array(
 					model.address.map((a: any) =>
@@ -121,6 +122,14 @@ export class SignUpComponent {
 		if (payload.id) {
 			this.userService.updateUser(payload).subscribe({
 				next: (res) => {
+					if (res.reLoginRequired) {
+				alert('Email changed. Please log in again.');
+
+				localStorage.removeItem('token');
+
+				this.router.navigate(['/sign-in']);
+				return;
+			}
 					console.log('User Updated', res);
 					alert('Update successful!');
 					this.router.navigate(['/details', payload.id]);
