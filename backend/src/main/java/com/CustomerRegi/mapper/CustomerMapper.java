@@ -4,7 +4,6 @@ import com.CustomerRegi.dto.CustomerAddressReportDTO;
 import com.CustomerRegi.dto.CustomerReportDTO;
 import com.CustomerRegi.dto.CustomerReqDTO;
 import com.CustomerRegi.dto.CustomerResDTO;
-import com.CustomerRegi.enums.AddressType;
 import com.CustomerRegi.model.Customer;
 import com.CustomerRegi.model.CustomerAddress;
 import org.mapstruct.*;

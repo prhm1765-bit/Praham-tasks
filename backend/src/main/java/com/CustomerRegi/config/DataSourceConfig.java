@@ -18,7 +18,6 @@ public class DataSourceConfig {
 	/**
 	 * @param registry registry which manages tenant datasources
 	 * @return datasource which dynamically switches between MASTER and TENANT DB
-	 *
 	 * This is the main datasource used by Spring JPA.
 	 * Primary DataSource bean
 	 */

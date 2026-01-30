@@ -24,4 +24,5 @@ public class TenantService {
 		tenantMapper.updateTenantFromCustomer(saved, tenant);
 		tenantRepo.save(tenant);
 	}
+
 }
