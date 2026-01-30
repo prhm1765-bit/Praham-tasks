@@ -3,7 +3,16 @@
 		<h2>Customers</h2>
 		<button (click)="logout()">Log out</button>
 		<p class="subtitle">Manage registered customers</p>
+		<label>
+			Report Language:
+			<select [(ngModel)]="selectedLang">
+				<option value="en">English</option>
+				<option value="hi">Hindi</option>
+				<option value="gu">Gujarati</option>
+			</select>
+		</label>
 		<button class="download-btn" (click)="generateReport()">Download PDF Report</button>
+		<button class="download-btn" (click)="generateAddressReport()">Download Address Report</button>
 		<p *ngIf="loading" class="loading-text">Loading customers...</p>
 
 		<!-- Header -->

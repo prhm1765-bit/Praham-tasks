@@ -15,6 +15,7 @@ export class CustomerListComponent implements OnInit {
 	public showYes = false;
 	public popupTitle = '';
 	public popupMessage = '';
+	public selectedLang: string = '';
 
 	constructor(private adminUserService: AdminUserService) {}
 
@@ -36,12 +37,28 @@ export class CustomerListComponent implements OnInit {
 	}
 
 	public generateReport(): void {
-		this.adminUserService.allUserReports().subscribe({
+		this.adminUserService.allUserReports(this.selectedLang).subscribe({
 			next: (blob) => {
 				const url = window.URL.createObjectURL(blob);
 				const a = document.createElement('a');
 				a.href = url;
 				a.download = 'all-customers.pdf';
+				a.click();
+				window.URL.revokeObjectURL(url);
+			},
+			error: () => {
+				alert('Failed to download report');
+			}
+		});
+	}
+
+	public generateAddressReport(): void {
+		this.adminUserService.allUserAddressReports(this.selectedLang).subscribe({
+			next: (blob) => {
+				const url = window.URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = 'all-customers-Address.pdf';
 				a.click();
 				window.URL.revokeObjectURL(url);
 			},

@@ -1,5 +1,6 @@
 package com.CustomerRegi.service;
 
+import com.CustomerRegi.dto.CustomerAddressReportDTO;
 import com.CustomerRegi.dto.CustomerReportDTO;
 import com.CustomerRegi.dto.CustomerResDTO;
 import com.CustomerRegi.mapper.CustomerMapper;
@@ -12,11 +13,12 @@ import net.sf.jasperreports.engine.util.JRLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -31,24 +33,46 @@ public class ReportServiceImpl implements  ReportService {
 	* @return it is returning bytes for pdf generation
 	* */
 	@Override
-	public byte[] exportToPdf(String reportName) throws Exception {
-
-		// Fetch all customers data
+	public byte[] exportToPdf(String reportName, String lang) throws Exception {
 		List<CustomerResDTO> allCustomers = customerService.findAll();
 		List<CustomerReportDTO> data = customerMapper.toReportDTOList(allCustomers);
-		//Report path
-		ClassPathResource resource = new ClassPathResource("reports/" + reportName);
 		JasperReport jasperReport;
-		try (InputStream inputStream = resource.getInputStream()) {
-			// Compile JRXML to JasperReport
+		try (InputStream inputStream = new ClassPathResource("reports/" + reportName).getInputStream()) {
 			jasperReport = (JasperReport) JRLoader.loadObject(inputStream);
 		}
 		JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(data);
-		// Parameters
-		Map<String, Object> parameters = new HashMap<>();
-		// Fill report
-		JasperPrint jasperPrint = JasperFillManager.fillReport( jasperReport, parameters, dataSource);
+		Locale locale = (lang == null || lang.isBlank()) ? Locale.ENGLISH : new Locale(lang);
+		Map<String, Object> parameters = getAllLabels(locale);
+		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 		return JasperExportManager.exportReportToPdf(jasperPrint);
 	}
 
+	private Map<String, Object> getAllLabels(Locale locale) {
+		ResourceBundle bundle = ResourceBundle.getBundle("reports/i18n/labels", locale);
+		Map<String, Object> params = new HashMap<>();
+		for (String key : bundle.keySet()) {
+			params.put(key, bundle.getString(key));
+		}
+		return params;
+	}
+
+	/**
+	 * @param reportName is the file name of the report
+	 * {@inheritDoc}
+	 * @return it is returning bytes for pdf generation
+	 * */
+	@Override
+	public byte[] exportAddressToPdf(String reportName, String lang) throws Exception {
+		List<CustomerResDTO> allCustomers = customerService.findAll();
+		List<CustomerAddressReportDTO> data = customerMapper.toAddressReportDTOList(allCustomers);
+		JasperReport jasperReport;
+		try (InputStream inputStream = new ClassPathResource("reports/" + reportName).getInputStream()) {
+			jasperReport = (JasperReport) JRLoader.loadObject(inputStream);
+		}
+		JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(data);
+		Locale locale = (lang == null || lang.isBlank()) ? Locale.ENGLISH : new Locale(lang);
+		Map<String, Object> parameters = getAllLabels(locale);
+		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+		return JasperExportManager.exportReportToPdf(jasperPrint);
+	}
 }
