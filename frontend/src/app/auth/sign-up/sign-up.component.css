@@ -4,38 +4,43 @@
   background: linear-gradient(135deg, #667eea, #764ba2);
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 10px;
+  align-items: center;
+  padding: 6px;
 }
 
 .auth-card {
   width: 100%;
   max-width: 460px;
   background: #fff;
-  padding: 25px 30px;
-  border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-  animation: fadeIn 0.4s ease;
+  padding: 6px 12px;
+  border-radius: 10px;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.10);
+  animation: fadeIn 0.22s ease;
+  /* Fit exactly to viewport height so no scrollbars appear */
+  height: calc(100vh - 12px);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Headings */
 .auth-card h2 {
   text-align: center;
-  margin-bottom: 5px;
+  margin-bottom: 1px;
 }
 
 .subtitle {
   text-align: center;
-  font-size: 14px;
+  font-size: 11px;
   color: #777;
-  margin-bottom: 18px;
+  margin-bottom: 8px;
 }
 
 
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 6px 8px;
 }
 
 @media (max-width: 768px) {
@@ -48,12 +53,14 @@
   grid-column: 1 / -1;
 }
 
-mat-form-field {
-  width: 100%;
+.mat-mdc-form-field {
+  margin-bottom: 6px;
 }
 
-.mat-mdc-form-field {
-  margin-bottom: 8px;
+mat-form-field {
+  width: 100%;
+  margin-bottom: 6px;
+  box-sizing: border-box;
 }
 
 
@@ -69,13 +76,14 @@ mat-form-field {
   margin-bottom: 4px;
 }
 
+
 .native-date-input {
-  height: 56px;
-  padding: 0 12px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: 1px solid rgba(0,0,0,0.23);
-  transition: 0.2s ease;
+  height: 36px;
+  padding: 0 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid rgba(0,0,0,0.16);
+  transition: 0.16s ease;
 }
 
 .native-date-input:focus {
@@ -87,15 +95,19 @@ mat-form-field {
 
 button[type="submit"] {
   width: 100%;
-  margin-top: 10px;
-  padding: 14px;
-  border-radius: 30px;
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-radius: 22px;
   border: none;
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: #fff;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+  /* keep submit visible at bottom of card */
+  position: sticky;
+  bottom: 8px;
+  z-index: 10;
 }
 
 button[type="submit"]:hover:not(:disabled) {
@@ -132,4 +144,28 @@ button[type="submit"]:disabled {
   color: #f44336;
   font-size: 12px;
   margin-top: 4px;
+}
+
+/* Red border for native date input when invalid */
+.native-date-input.invalid {
+  border-color: #f44336;
+  box-shadow: 0 0 0 1px rgba(244,67,54,0.12);
+}
+
+/* Global snackbar styles so overlay snackbars pick them up */
+.snackbar-success {
+	background-color: #4caf50 !important;
+	color: #ffffff !important;
+}
+
+/* Ensure snackbars are centered horizontally when requested */
+.mat-snack-bar-container {
+	justify-content: center;
+}
+
+/* Apply green background to all snackbars */
+.mat-snack-bar-container,
+.mat-snack-bar-container .mat-simple-snackbar {
+  background-color: #4caf50 !important;
+  color: #fff !important;
 }

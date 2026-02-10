@@ -1,2 +1,23 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+/* Global snackbar styles so overlay snackbars pick them up */
+.snackbar-success {
+	background-color: #4caf50 !important;
+	color: #ffffff !important;
+}
+
+/* Apply green background to all snackbars (MDC & non-MDC) and center when requested */
+.cdk-overlay-container .mat-snack-bar-container,
+.cdk-overlay-container .mat-snack-bar-container .mat-simple-snackbar,
+.cdk-overlay-container .mat-mdc-snack-bar-container,
+.cdk-overlay-container .mat-mdc-snack-bar-container .mdc-snackbar__surface,
+.cdk-overlay-container .mat-mdc-snack-bar-container .mat-simple-snackbar {
+	background-color: #4caf50 !important;
+	color: #fff !important;
+}
+
+.cdk-overlay-container .mat-snack-bar-container {
+	justify-content: center !important;
+}

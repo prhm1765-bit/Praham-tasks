@@ -1,10 +1,14 @@
 package com.CustomerRegi.mapper;
 
+import com.CustomerRegi.dto.CustomerResDTO;
+import com.CustomerRegi.dto.TenantResDTO;
 import com.CustomerRegi.model.Customer;
 import com.CustomerRegi.model.Tenant;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface TenantMapper {
@@ -19,4 +23,5 @@ public interface TenantMapper {
 	@Mapping(target = "id", ignore = true)
 	void updateTenantFromCustomer(Customer customer, @MappingTarget Tenant tenant);
 
+	List<TenantResDTO> toDTOList(List<Tenant> tenants);
 }

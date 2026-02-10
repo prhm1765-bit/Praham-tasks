@@ -44,8 +44,7 @@ public class ReportController {
 
 		// Return as HTTP response
 		return ResponseEntity.ok()
-				.header(HttpHeaders.CONTENT_DISPOSITION,
-						"inline; filename=customer-report.pdf")
+				.header(HttpHeaders.CONTENT_DISPOSITION,  "inline; filename=customer-report.pdf")
 				.contentType(MediaType.APPLICATION_PDF)
 				.body(pdfBytes);
 	}

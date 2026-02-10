@@ -2,6 +2,7 @@ package com.CustomerRegi.controller;
 
 import com.CustomerRegi.dto.CustomerReqDTO;
 import com.CustomerRegi.dto.CustomerResDTO;
+import com.CustomerRegi.dto.TenantResDTO;
 import com.CustomerRegi.enums.Role;
 import com.CustomerRegi.model.Customer;
 import com.CustomerRegi.repository.CustomerRepo;
@@ -34,7 +35,7 @@ public class CustomerRegistrationController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping
-	public ResponseEntity<List<CustomerResDTO>> getAll() {
+	public ResponseEntity<List<TenantResDTO>> getAll() {
 		return ResponseEntity.ok(customerRegistrationService.findAll());
 	}
 
@@ -82,7 +83,3 @@ public class CustomerRegistrationController {
 	}
 
 }
-
-
-
-

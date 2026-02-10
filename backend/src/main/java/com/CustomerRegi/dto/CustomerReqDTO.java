@@ -31,8 +31,8 @@ public class CustomerReqDTO {
 	@Pattern(regexp = "^[6-9]\\d{9}$", message = "Invalid mobile number")
 	private String mobilenumber;
 
-	@NotNull(message = "Dob can not be null")
-	@Past(message = "Date of birth must be in the past")
+	@NotNull(message = "Dob can not be null", groups = OnCreate.class)
+	@Past(message = "Date of birth must be in the past", groups = OnCreate.class)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate dob;
 

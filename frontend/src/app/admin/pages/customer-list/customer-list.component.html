@@ -17,20 +17,14 @@
 
 		<!-- Header -->
 		<div class="list-header" *ngIf="!loading && customers.length">
-			<span>ID</span>
-			<span>Name</span>
 			<span>Email</span>
 			<span>Mobile</span>
-			<span>Gender</span>
 		</div>
 
 		<!-- Rows -->
 		<div class="list-row" *ngFor="let customer of customers">
-			<span>{{ customer.id }}</span>
-			<span>{{ customer.firstName }} {{ customer.lastName }}</span>
 			<span>{{ customer.email }}</span>
 			<span>{{ customer.mobilenumber }}</span>
-			<span>{{ customer.gender }}</span>
 		</div>
 
 		<p *ngIf="!loading && !customers.length" class="empty-text">

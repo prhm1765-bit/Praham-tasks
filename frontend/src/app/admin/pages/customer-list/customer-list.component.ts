@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminUserService } from '../../services/admin-customer.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
 	selector: 'app-customer-list',
@@ -15,9 +16,9 @@ export class CustomerListComponent implements OnInit {
 	public showYes = false;
 	public popupTitle = '';
 	public popupMessage = '';
-	public selectedLang: string = '';
+	public selectedLang: string = 'en';
 
-	constructor(private adminUserService: AdminUserService) {}
+	constructor(private adminUserService: AdminUserService, private snackBar: MatSnackBar) {}
 
 	public ngOnInit(): void {
 		this.loadUsers();
@@ -47,7 +48,7 @@ export class CustomerListComponent implements OnInit {
 				window.URL.revokeObjectURL(url);
 			},
 			error: () => {
-				alert('Failed to download report');
+				this.snackBar.open('Failed to download report', '', { duration: 3000, panelClass: 'snackbar-success', verticalPosition: 'top', horizontalPosition: 'center' });
 			}
 		});
 	}
@@ -63,7 +64,7 @@ export class CustomerListComponent implements OnInit {
 				window.URL.revokeObjectURL(url);
 			},
 			error: () => {
-				alert('Failed to download report');
+				this.snackBar.open('Failed to download report', '', { duration: 3000, panelClass: 'snackbar-success', verticalPosition: 'top', horizontalPosition: 'center' });
 			}
 		});
 	}

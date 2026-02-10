@@ -3,6 +3,7 @@ package com.CustomerRegi.tenant;
 import com.CustomerRegi.enums.Role;
 import com.CustomerRegi.model.Tenant;
 import com.CustomerRegi.repository.TenantRepo;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class TenantProvisioningService {
 	 * This method creates tenant database, creates tables and then stores tenant details in MASTER DB.
 	 */
 
-	public Tenant registerTenant(String tenantId,String companyCode) {
+	public Tenant registerTenant(String tenantId,String companyCode, String email, String mobilenumber) {
 		String dbName = "tenant_" + tenantId;
 		createDatabase(dbName);
 		createTenantTables(dbName);
@@ -41,6 +42,8 @@ public class TenantProvisioningService {
 			.tenantId(tenantId)
 			.dbName(dbName)
 			.companyCode(companyCode)
+			.email(email)
+			.mobilenumber(mobilenumber)
 			.role(Role.CUSTOMER)
 			.status("ACTIVE")
 			.build();
@@ -116,6 +119,36 @@ public class TenantProvisioningService {
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to drop tenant database", e);
 		}
+	}
+
+	@PostConstruct
+	public void migrateOldTenants() {
+		runMasterMigration();
+	}
+
+	public void runMasterMigration() {
+
+		try (Connection connection = masterDataSource.getConnection();
+			 Statement stmt = connection.createStatement()) {
+
+		stmt.execute("DROP PROCEDURE IF EXISTS migrate_existing_customer_data");
+
+			// 1. Create procedure from file
+		InputStream is = getClass().getClassLoader()
+				.getResourceAsStream("database/migration/master-migration.sql");
+
+		String procedureSql = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+		stmt.execute(procedureSql);
+
+		// 2. Call procedure
+		stmt.execute("CALL migrate_existing_customer_data()");
+
+		// 3. Drop procedure
+		stmt.execute("DROP PROCEDURE IF EXISTS migrate_existing_customer_data");
+
+	} catch (Exception e) {
+		throw new RuntimeException("Migration failed", e);
+	}
 	}
 
 }

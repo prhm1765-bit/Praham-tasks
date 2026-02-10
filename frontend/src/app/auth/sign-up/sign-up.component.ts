@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 
@@ -18,7 +19,8 @@ export class SignUpComponent {
 		private fb : FormBuilder,
 		private userService: UserService,
 		private route: ActivatedRoute,
-		private router: Router
+		private router: Router,
+		private snackBar: MatSnackBar
 	) {}
 
 	ngOnInit(): void {
@@ -53,14 +55,14 @@ export class SignUpComponent {
 					lastName: [model.lastName, [Validators.required]],
 					gender: [model.gender, [Validators.required]],
 					dob: [model.dob, [Validators.required]],
-					mobilenumber: [model.mobilenumber, [Validators.required]],
+						mobilenumber: [model.mobilenumber, [Validators.required, Validators.pattern('^[6-9]\\d{9}$')]],
 					email: [model.email, [Validators.required, Validators.email]],
 					password: [''], // never prefill
 					address: this.fb.array(
 						model.address.map((a: any) =>
 							this.fb.group({
-							address: [a.address, [Validators.required]],
-							addresstype: [a.addresstype, [Validators.required]]
+								address: [a.address, [Validators.required, Validators.minLength(5)]],
+								addresstype: [a.addresstype, [Validators.required]]
 							})
 						)
 					)
@@ -74,14 +76,14 @@ export class SignUpComponent {
 				lastName: [model.lastName, [Validators.required]],
 				gender: [model.gender, [Validators.required]],
 				dob: [model.dob, [Validators.required]],
-				mobilenumber: [model.mobilenumber, [Validators.required]],
+					mobilenumber: [model.mobilenumber, [Validators.required, Validators.pattern('^[6-9]\\d{9}$')]],
 				email: [model.email, [Validators.required, Validators.email]],
 				companyCode: [model.companyCode, [Validators.required]],
-				password: [''],
+				password: ['', [Validators.required, Validators.minLength(8)]],
 				address: this.fb.array(
 					model.address.map((a: any) =>
 						this.fb.group({
-							address: [a.address, [Validators.required]],
+							address: [a.address, [Validators.required, Validators.minLength(5)]],
 							addresstype: [a.addresstype, [Validators.required]]
 						})
 					)
@@ -93,7 +95,7 @@ export class SignUpComponent {
 	private createAddressGroup(): FormGroup {
 		return this.fb.group({
 		address: ['', [Validators.required, Validators.minLength(5)]],
-		addresstype: ['home', Validators.required]
+		addresstype: ['HOME', Validators.required]
 		});
 	}
 
@@ -119,47 +121,60 @@ export class SignUpComponent {
 
 		const payload = this.signUpForm.getRawValue(); 
 
+		// Ensure dob is formatted as yyyy-mm-dd for backend
+		if (payload.dob) {
+			const d = payload.dob instanceof Date ? payload.dob : new Date(payload.dob);
+			if (!isNaN(d.getTime())) {
+				const yyyy = d.getFullYear();
+				const mm = String(d.getMonth() + 1).padStart(2, '0');
+				const dd = String(d.getDate()).padStart(2, '0');
+				payload.dob = `${yyyy}-${mm}-${dd}`;
+			}
+		}
+
 		if (payload.id) {
 			this.userService.updateUser(payload).subscribe({
 				next: (res) => {
 					if (res.reLoginRequired) {
-				alert('Email changed. Please log in again.');
+					this.snackBar.open('Email changed. Please log in again.', '', { duration: 3000, panelClass: 'snackbar-success', verticalPosition: 'top', horizontalPosition: 'center' });
 
-				localStorage.removeItem('token');
+					localStorage.removeItem('token');
 
-				this.router.navigate(['/sign-in']);
-				return;
+					this.router.navigate(['/sign-in']);
+					return;
 			}
 					console.log('User Updated', res);
-					alert('Update successful!');
+						this.snackBar.open('Update successful!', '', { duration: 3000, panelClass: 'snackbar-success', verticalPosition: 'top', horizontalPosition: 'center' });
 					this.router.navigate(['/details', payload.id]);
 				},
 				error: (err) => {
 					const msg = err?.error?.errors?.message || 'Update failed';
-					alert(msg); 
+						this.snackBar.open(msg, '', { duration: 3000, panelClass: 'snackbar-success', verticalPosition: 'top', horizontalPosition: 'center' });
 				}
 		});
 		} else {
 			this.userService.registerUser(payload).subscribe({
 				next: (res) => {
 					console.log('User Registered', res);
-					alert('Registration successful!');
+					this.snackBar.open('Registration successful!', '', { duration: 3000, panelClass: 'snackbar-success', verticalPosition: 'top', horizontalPosition: 'center' });
 					this.router.navigate(['/sign-in']);
 				},
-				error: (err) => {
-					const backendErrors = err?.error?.errors;
+			error: (err) => {
+  const backendErrors = err?.error?.errors;
 
-  // EMAIL ALREADY EXISTS
-  if (backendErrors?.email) {
-    this.signUpForm
-      .get('email')
-      ?.setErrors({ backend: backendErrors.email });
+  if (backendErrors) {
+    Object.keys(backendErrors).forEach(field => {
+      const control = this.signUpForm.get(field);
+      if (control) {
+        control.setErrors({ backend: backendErrors[field] });
+      }
+    });
     return;
   }
 
-  // fallback
-  alert('Registration failed');
-				}
+					this.snackBar.open('Registration failed', '', { duration: 3000, panelClass: 'snackbar-success', verticalPosition: 'top', horizontalPosition: 'center' });
+}
+
 			});
 		}
 	}

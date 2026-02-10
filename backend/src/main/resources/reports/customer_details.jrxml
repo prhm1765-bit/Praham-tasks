@@ -92,39 +92,18 @@
 				<text><![CDATA[Id]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="40" y="0" width="80" height="21" uuid="aeffc968-56cc-42d2-85c1-16f7043418c4"/>
-				<textElement>
-					<font fontName="Arial Unicode MS"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{COL_NAME}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="119" y="0" width="91" height="20" uuid="1e7d986d-6e3d-4168-8bb2-f560cc0c1f4d"/>
+				<reportElement x="51" y="0" width="91" height="20" uuid="1e7d986d-6e3d-4168-8bb2-f560cc0c1f4d"/>
 				<textElement>
 					<font fontName="Arial Unicode MS"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{COL_MOBILE}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="208" y="0" width="92" height="20" uuid="b95f91d2-70f5-4398-bd5e-fac279c79d74"/>
-				<textElement>
-					<font fontName="Arial Unicode MS"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{COL_GENDER}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="387" y="0" width="100" height="20" uuid="25a1088e-2908-4ca7-9d26-d23c8e3aa348"/>
+				<reportElement x="182" y="0" width="100" height="20" uuid="25a1088e-2908-4ca7-9d26-d23c8e3aa348"/>
 				<textElement>
 					<font fontName="Arial Unicode MS"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{COL_EMAIL}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="300" y="0" width="90" height="20" uuid="9c84f7f3-4052-4e77-bd0e-54a0e113baf8"/>
-				<textElement>
-					<font fontName="Arial Unicode MS"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{COL_DOB}]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
@@ -137,36 +116,15 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight">
-				<reportElement positionType="Float" x="40" y="0" width="80" height="20" uuid="bbb2ce81-d674-4a98-8aa7-12619f48592e"/>
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{firstName}]]></textFieldExpression>
-			</textField>
 			<textField>
-				<reportElement x="110" y="0" width="110" height="20" uuid="1dbbb95c-8d28-4a03-889a-b87156b0aea0"/>
+				<reportElement x="52" y="0" width="110" height="20" uuid="1dbbb95c-8d28-4a03-889a-b87156b0aea0"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{mobilenumber}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="200" y="0" width="80" height="20" uuid="9722c840-8b79-4d60-81c7-933edbb2d076"/>
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{gender}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="280" y="-1" width="80" height="21" uuid="20c649a8-6a67-4e3f-b51e-030729652c96"/>
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{dob}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="370" y="0" width="80" height="20" uuid="d6648e0d-871c-4dca-bf23-32a28b986a63"/>
+				<reportElement x="184" y="0" width="80" height="20" uuid="d6648e0d-871c-4dca-bf23-32a28b986a63"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
