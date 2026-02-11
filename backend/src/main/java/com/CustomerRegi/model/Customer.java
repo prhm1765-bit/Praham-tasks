@@ -39,7 +39,7 @@ public class Customer {
 
 	@Column(name = "dob")
 	@NotNull(message = "Dob can not be null")
-	@Past(message = "Date of birth must be in the past")
+	@Past(message = "Date must be in the past")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate dob;
 

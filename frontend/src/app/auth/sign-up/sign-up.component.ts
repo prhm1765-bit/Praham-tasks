@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
@@ -54,7 +54,7 @@ export class SignUpComponent {
 					firstName: [model.firstName, [Validators.required]],
 					lastName: [model.lastName, [Validators.required]],
 					gender: [model.gender, [Validators.required]],
-					dob: [model.dob, [Validators.required]],
+					dob: [model.dob, [Validators.required, this.pastDateValidator()]],
 						mobilenumber: [model.mobilenumber, [Validators.required, Validators.pattern('^[6-9]\\d{9}$')]],
 					email: [model.email, [Validators.required, Validators.email]],
 					password: [''], // never prefill
@@ -75,7 +75,7 @@ export class SignUpComponent {
 				firstName: [model.firstName, [Validators.required]],
 				lastName: [model.lastName, [Validators.required]],
 				gender: [model.gender, [Validators.required]],
-				dob: [model.dob, [Validators.required]],
+				dob: [model.dob, [Validators.required, this.pastDateValidator()]],
 					mobilenumber: [model.mobilenumber, [Validators.required, Validators.pattern('^[6-9]\\d{9}$')]],
 				email: [model.email, [Validators.required, Validators.email]],
 				companyCode: [model.companyCode, [Validators.required]],
@@ -90,6 +90,27 @@ export class SignUpComponent {
 				)
 			});
 		}
+	}
+
+	private pastDateValidator(): ValidatorFn {
+		return (control: AbstractControl): ValidationErrors | null => {
+			const val = control.value;
+			if (!val) return null; // required validator handles empties
+
+			const d = val instanceof Date ? val : new Date(val);
+			if (isNaN(d.getTime())) {
+				return { invalidDate: true };
+			}
+
+			// compare date parts only (ignore time)
+			const inputDate = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+			const today = new Date();
+			today.setHours(0, 0, 0, 0);
+			if (inputDate >= today.getTime()) {
+				return { futureDate: true };
+			}
+			return null;
+		};
 	}
 
 	private createAddressGroup(): FormGroup {

@@ -176,14 +176,18 @@
 				<mat-form-field appearance="outline" class="w-100">
 					<mat-label>Date of Birth</mat-label>
 					<input matInput
+						readonly
+						placeholder="mm-dd-yyyy"
 						[matDatepicker]="picker"
 						formControlName="dob"
 						(dateChange)="signUpForm.get('dob')?.markAsTouched()"
 						(blur)="signUpForm.get('dob')?.markAsTouched()">
 					<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
 					<mat-datepicker #picker></mat-datepicker>
-					<mat-error *ngIf="signUpForm.get('dob')?.hasError('backend')">{{ signUpForm.get('dob')?.getError('backend') }}</mat-error>
-					<mat-error *ngIf="signUpForm.get('dob')?.hasError('required') && signUpForm.get('dob')?.touched">Date of birth is required</mat-error>
+							<mat-error *ngIf="signUpForm.get('dob')?.hasError('backend')">{{ signUpForm.get('dob')?.getError('backend') }}</mat-error>
+							<mat-error *ngIf="signUpForm.get('dob')?.hasError('invalidDate') && signUpForm.get('dob')?.touched">Enter a valid date</mat-error>
+							<mat-error *ngIf="signUpForm.get('dob')?.hasError('futureDate') && signUpForm.get('dob')?.touched">Date must be in the past</mat-error>
+							<mat-error *ngIf="signUpForm.get('dob')?.hasError('required') && signUpForm.get('dob')?.touched">Date of birth is required</mat-error>
 				</mat-form-field>
 			</div>
 
@@ -216,7 +220,7 @@
           <mat-label>Address {{ i + 1 }}</mat-label>
 		  <textarea matInput formControlName="address" rows="1" (blur)="addresses.at(i).get('address')?.markAsTouched()"></textarea>
 		  <mat-error *ngIf="addr.get('address')?.hasError('required') && addr.get('address')?.touched">Address is required</mat-error>
-		  <mat-error *ngIf="!addr.get('address')?.errors?.['required'] && addr.get('address')?.hasError('minlength') && addr.get('address')?.touched">Address must be at least 5 characters</mat-error>
+		  <mat-error *ngIf="!addr.get('address')?.errors?.['required'] && addr.get('address')?.hasError('minlength') && addr.get('address')?.touched">Enter at least 5 characters</mat-error>
         </mat-form-field>
       </div>
 

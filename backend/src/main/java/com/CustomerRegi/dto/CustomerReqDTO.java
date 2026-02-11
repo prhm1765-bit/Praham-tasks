@@ -32,7 +32,7 @@ public class CustomerReqDTO {
 	private String mobilenumber;
 
 	@NotNull(message = "Dob can not be null", groups = OnCreate.class)
-	@Past(message = "Date of birth must be in the past", groups = OnCreate.class)
+	@Past(message = "Date must be in the past", groups = OnCreate.class)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate dob;
 
