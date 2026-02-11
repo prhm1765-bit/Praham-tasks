@@ -23,14 +23,14 @@ public class JwtService {
 	 * Method for generating token
 	 * @param email is Customer's email
 	 * @param role is Customer's role-either admin or customer
-	 * @param id is Customer's id
 	 * @return token as string
 	 * */
-	public String generateToken(String email, String role, int id) {
+	public String generateToken(String email, String role, String tenantId, int customerId) {
 		return Jwts.builder()
 			.setSubject(email)
 			.claim("role", role)
-			.claim("id", id)
+			.claim("tenantId", tenantId)
+			.claim("customerId", customerId)
 			.setIssuedAt(new Date())
 			.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 12)) // 12 hour
 			.signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -93,6 +93,10 @@ public class JwtService {
 	private Key getSigningKey() {
 		byte[] keyBytes = Decoders.BASE64.decode(Base64.getEncoder().encodeToString(SECRET_KEY.getBytes()));
 		return Keys.hmacShaKeyFor(keyBytes);
+	}
+
+	public String extractTenantId(String token) {
+		return extractAllClaims(token).get("tenantId", String.class);
 	}
 
 }

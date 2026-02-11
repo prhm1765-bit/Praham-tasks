@@ -20,5 +20,7 @@ public class CustomerResDTO {
 	private String email;
 	private List<CustomerAddress> address;
 	private Gender gender;
+	private String tenantId;
+	private boolean reLoginRequired;
 
 }

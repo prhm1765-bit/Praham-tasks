@@ -4,6 +4,7 @@ import { CustomerListComponent } from './pages/customer-list/customer-list.compo
 import { AdminRoutingModule } from './admin-routing.module';
 import { PopupComponent } from '../shared/popup/popup.component';
 import { MatDialogModule } from "@angular/material/dialog";
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
 	declarations: [
@@ -13,7 +14,8 @@ import { MatDialogModule } from "@angular/material/dialog";
 	imports: [
 		CommonModule,
 		AdminRoutingModule,
-		MatDialogModule
+		MatDialogModule,
+		FormsModule   
 	]
 })
 

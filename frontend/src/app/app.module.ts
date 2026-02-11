@@ -23,6 +23,8 @@ import { OnlyNumbersDirective } from './directives/only-numbers.directive';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthInterceptor } from './auth.interceptor';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
 	declarations: [
@@ -50,7 +52,9 @@ import { MatDialogModule } from '@angular/material/dialog';
 		MatNativeDateModule,
 		MatFormFieldModule,
 		HttpClientModule,
-		MatDialogModule
+		MatDialogModule,
+		MatSnackBarModule,
+		MatTooltipModule
 	],
 	providers: [
 	{
@@ -63,3 +67,5 @@ import { MatDialogModule } from '@angular/material/dialog';
 })
 
 export class AppModule { }
+
+

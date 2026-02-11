@@ -17,6 +17,9 @@ public final class ApiPathConstants {
 	// Path for Reports api - Customer List
 	public static final String CUSTOMERDATA = "/customer-data";
 
+	// Path for Reports api - Customer Address
+	public static final String CUSTOMERADDRESSDATA = "/customer-Address-data";
+
 	// Path for customer sign up
 	public static final String SIGNUP = "/sign-up";
 
@@ -31,5 +34,8 @@ public final class ApiPathConstants {
 
 	// Path for Enums-AddressType
 	public static final String ADDRESSTYPE = "/address-types";
+
+	// Path for Tenant
+	public static final String TENANT = API + "/tenants";
 
 }

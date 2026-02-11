@@ -23,6 +23,7 @@ import { PopupComponent } from "src/app/shared/popup/popup.component";
 
 	public ngOnInit(): void {
 		this.signInForm = this.fb.group({
+			companyCode: ['', Validators.required],
 			email: ['', [Validators.required, Validators.email]],  
 			password: ['', [Validators.required, Validators.minLength(6)]]
 		});
@@ -34,10 +35,10 @@ import { PopupComponent } from "src/app/shared/popup/popup.component";
 		this.userService.signInUser(this.signInForm.value).subscribe({
 			next: (res: any) => {
 				localStorage.setItem('token', res.token);
-
+				
 				const payload = JSON.parse(atob(res.token.split('.')[1]));
 				const role = payload.role;
-				const id = payload.id;
+				const id = payload.customerId;
 
 				this.dialog.open(PopupComponent, {
 					width: '350px',

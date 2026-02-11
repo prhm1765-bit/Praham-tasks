@@ -17,9 +17,10 @@ export class NoSpaceOnlyLettersDirective {
 			return;
 		}
 		if (event.key === ' ') {
-		event.preventDefault();
+			event.preventDefault();
 			return;
 		}
+		// Only allow letters, numbers, apostrophe and hyphen
 		if (!/^[a-zA-Z0-9'-]$/.test(event.key)) {
 			event.preventDefault();
 		}
@@ -34,7 +35,7 @@ export class NoSpaceOnlyLettersDirective {
 		}
 	}
 
-	// ---------- MARK TOUCHED ----------
+	// Mark control as touched when it loses focus so validation can run
 	@HostListener('blur')
 	public onBlur() {
 		this.control?.control?.markAsTouched();

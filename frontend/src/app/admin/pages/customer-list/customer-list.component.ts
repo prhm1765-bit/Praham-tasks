@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminUserService } from '../../services/admin-customer.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
 	selector: 'app-customer-list',
@@ -15,9 +16,9 @@ export class CustomerListComponent implements OnInit {
 	public showYes = false;
 	public popupTitle = '';
 	public popupMessage = '';
-	private deleteId!: number;
+	public selectedLang: string = 'en';
 
-	constructor(private adminUserService: AdminUserService) {}
+	constructor(private adminUserService: AdminUserService, private snackBar: MatSnackBar) {}
 
 	public ngOnInit(): void {
 		this.loadUsers();
@@ -36,37 +37,41 @@ export class CustomerListComponent implements OnInit {
 		});
 	}
 
+	public generateReport(): void {
+		this.adminUserService.allUserReports(this.selectedLang).subscribe({
+			next: (blob) => {
+				const url = window.URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = 'all-customers.pdf';
+				a.click();
+				window.URL.revokeObjectURL(url);
+			},
+			error: () => {
+				this.snackBar.open('Failed to download report', '', { duration: 3000, panelClass: 'snackbar-success', verticalPosition: 'top', horizontalPosition: 'center' });
+			}
+		});
+	}
+
+	public generateAddressReport(): void {
+		this.adminUserService.allUserAddressReports(this.selectedLang).subscribe({
+			next: (blob) => {
+				const url = window.URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = 'all-customers-Address.pdf';
+				a.click();
+				window.URL.revokeObjectURL(url);
+			},
+			error: () => {
+				this.snackBar.open('Failed to download report', '', { duration: 3000, panelClass: 'snackbar-success', verticalPosition: 'top', horizontalPosition: 'center' });
+			}
+		});
+	}
+
 	public logout() {
 		localStorage.removeItem('token'); 
 		window.location.href = '/sign-in'; 
-	}
-
-	public deleteCustomer(id: number): void {
-		this.deleteId = id;
-		this.popupTitle = 'Confirm Delete';
-		this.popupMessage = 'Are you sure you want to delete this user?';
-		this.showYes = true;
-		this.showPopup = true;
-	}
-
-	public confirmDelete() {
-		this.showPopup = false;
-		this.adminUserService.deleteCustomer(this.deleteId).subscribe({
-			next: () => {
-				this.loadUsers();
-				this.popupTitle = 'Success';
-				this.popupMessage = 'User deleted successfully.';
-				this.showYes = false;
-				this.showPopup = true;
-			},
-			error: (err) => {
-				this.popupTitle = 'Error';
-				this.popupMessage = err?.error?.errors?.message ||
-					err?.error?.message || 'Admin cannot be deleted.';
-				this.showYes = false;
-				this.showPopup = true;
-			}
-		});
 	}
 
 }

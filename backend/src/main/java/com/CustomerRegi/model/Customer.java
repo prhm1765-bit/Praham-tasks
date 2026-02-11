@@ -39,7 +39,7 @@ public class Customer {
 
 	@Column(name = "dob")
 	@NotNull(message = "Dob can not be null")
-	@Past(message = "Date of birth must be in the past")
+	@Past(message = "Date must be in the past")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate dob;
 
@@ -63,6 +63,9 @@ public class Customer {
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
 	@NotEmpty(message = "Address cannot be null")
 	private List<CustomerAddress> address;
+
+	@Column(name = "tenant_id", nullable = false, updatable = false)
+	private String tenantId;
 
 	//Using JPA lifecycle methods to store proper values which will execute before saving and before updating
 	@PrePersist
@@ -104,11 +107,11 @@ public class Customer {
 		//Mobile number trim and no space
 		if (this.mobilenumber != null) {
 			this.mobilenumber = this.mobilenumber.trim();
-		}
-		if (this.mobilenumber.contains(" ")) {
-			throw new IllegalArgumentException(
+			if (this.mobilenumber.contains(" ")) {
+				throw new IllegalArgumentException(
 					"Mobile number should not contain spaces."
-			);
+				);
+			}
 		}
 	}
 

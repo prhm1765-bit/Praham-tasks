@@ -1,8 +1,6 @@
 package com.CustomerRegi.mapper;
 
-import com.CustomerRegi.dto.CustomerReportDTO;
-import com.CustomerRegi.dto.CustomerReqDTO;
-import com.CustomerRegi.dto.CustomerResDTO;
+import com.CustomerRegi.dto.*;
 import com.CustomerRegi.model.Customer;
 import com.CustomerRegi.model.CustomerAddress;
 import org.mapstruct.*;
@@ -18,7 +16,20 @@ public interface CustomerMapper {
 
 	CustomerReportDTO toReportDTO(Customer customer);
 
-	List<CustomerReportDTO> toReportDTOList(List<Customer> customers);
+	List<CustomerReportDTO> toReportDTOList(List<TenantResDTO> tenants);
+
+	default List<CustomerAddressReportDTO> toAddressReportDTOList(List<CustomerResDTO> customers) {
+		return customers.stream()
+			.flatMap(c -> c.getAddress().stream()
+				.map(a -> {
+					CustomerAddressReportDTO dto = new CustomerAddressReportDTO();
+					dto.setFirstName(c.getFirstName());
+					dto.setAddress(a.getAddress());
+					dto.setAddressType(String.valueOf(a.getAddresstype()));
+					return dto;
+				}))
+			.toList();
+	}
 
 	List<CustomerResDTO> toDTOList(List<Customer> customers);
 

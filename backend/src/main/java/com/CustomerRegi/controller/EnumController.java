@@ -19,6 +19,7 @@ public class EnumController {
 
 	@GetMapping(ADDRESSTYPE)
 	public AddressType[] getAddressTypes() {
+
 		return AddressType.values();
 	}
 

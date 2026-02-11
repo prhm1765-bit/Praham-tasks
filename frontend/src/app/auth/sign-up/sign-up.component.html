@@ -4,55 +4,79 @@
 		<p class="subtitle" *ngIf="!isEditMode">Sign Up to continue</p>
 		<p class="subtitle" *ngIf="isEditMode">You can edit your details</p>
 
-		<div class="form-grid">
-
+		<div class="row">
 			<!-- First name -->
-			<mat-form-field appearance="outline" class="full-width">
-				<mat-label>First Name</mat-label>
-				<input
-					matInput
-					formControlName="firstName"
-					noSpaceOnlyLetters
-					maxlength="30"
-					placeholder="Enter first name"
-				/>
-				<mat-error *ngIf="signUpForm.get('firstName')?.hasError('required')">
-					First name is required
-				</mat-error>
-			</mat-form-field>
-
+			<div class="col-md-6">
+				<mat-form-field appearance="outline" class="w-100">
+					<mat-label>First Name</mat-label>
+					<input
+						matInput
+						formControlName="firstName"
+						noSpaceOnlyLetters
+						maxlength="30"
+						placeholder="Enter first name"
+					/>
+					<mat-error *ngIf="signUpForm.get('firstName')?.hasError('required')">
+						First name is required
+					</mat-error>
+				</mat-form-field>
+			</div>
 			<!-- Last name -->
-			<mat-form-field appearance="outline" class="full-width">
-				<mat-label>Last Name</mat-label>
-				<input
-					matInput
-					formControlName="lastName"
-					noSpaceOnlyLetters
-					maxlength="30"
-					placeholder="Enter last name"
-				/>
-				<mat-error *ngIf="signUpForm.get('lastName')?.hasError('required')">
-					Last name is required
-				</mat-error>
-			</mat-form-field>
+			<div class="col-md-6">
+				<mat-form-field appearance="outline" class="w-100">
+					<mat-label>Last Name</mat-label>
+					<input
+						matInput
+						formControlName="lastName"
+						noSpaceOnlyLetters
+						maxlength="30"
+						placeholder="Enter last name"
+					/>
+					<mat-error *ngIf="signUpForm.get('lastName')?.hasError('required')">
+						Last name is required
+					</mat-error>
+				</mat-form-field>
+			</div>
 		</div>
 
 		<!-- Mobile Number -->
 		<div class="form-group">
 			<mat-form-field appearance="outline" class="full-width full-row">
 				<mat-label>Mobile Number</mat-label>
-				<input
+					<input
 					matInput
 					type="tel"
 					formControlName="mobilenumber"
 					onlyNumbers
 					maxlength="10"
 					inputmode="numeric"
-					pattern="[0-9]*"
+					pattern="^[6-9][0-9]{9}$"
 					placeholder="Enter mobile number"
 				/>
-				<mat-error *ngIf="signUpForm.get('mobilenumber')?.hasError('required')">
+				 <mat-error
+					*ngIf="
+						signUpForm.get('mobilenumber')?.hasError('required') &&
+						signUpForm.get('mobilenumber')?.touched
+					">
 					Mobile number is required
+				</mat-error>
+
+					<mat-error
+						*ngIf="
+							!signUpForm.get('mobilenumber')?.errors?.['required'] &&
+							signUpForm.get('mobilenumber')?.hasError('pattern') &&
+							signUpForm.get('mobilenumber')?.touched
+						">
+						Enter a valid 10-digit mobile number
+					</mat-error>
+				<!-- Backend -->
+				<mat-error
+					*ngIf="
+						!signUpForm.get('mobilenumber')?.errors?.['required'] &&
+						signUpForm.get('mobilenumber')?.hasError('backend') &&
+						signUpForm.get('mobilenumber')?.touched
+					">
+					{{ signUpForm.get('mobilenumber')?.getError('backend') }}
 				</mat-error>
 			</mat-form-field>
 		</div>
@@ -81,10 +105,43 @@
 			</mat-form-field>
 		</div>
 
+		<!--  COMPANY CODE (used to create tenant) -->
+		<div class="form-group" *ngIf="!isEditMode">
+			<mat-form-field appearance="outline" class="full-width full-row">
+				<mat-label>Company Code</mat-label>
+				<input
+					matInput
+					formControlName="companyCode"
+					maxlength="20"
+					placeholder="Enter company code (example: acme)"
+				/>
+				<button type="button" mat-icon-button matSuffix matTooltip="This code will be used by your team to log in later" aria-label="Company code info">
+					<mat-icon>info</mat-icon>
+				</button>
+				<!-- Required -->
+				<mat-error
+				*ngIf="
+					signUpForm.get('companyCode')?.hasError('required') &&
+					signUpForm.get('companyCode')?.touched
+				">
+				Company code is required
+				</mat-error>
+				<!-- Backend -->
+				<mat-error
+				*ngIf="
+					!signUpForm.get('companyCode')?.errors?.['required'] &&
+					signUpForm.get('companyCode')?.hasError('backend') &&
+					signUpForm.get('companyCode')?.touched
+				">
+				{{ signUpForm.get('companyCode')?.getError('backend') }}
+				</mat-error>
+			</mat-form-field>
+		</div>
+
 		<!-- PASSWORD -->
 		<mat-form-field  *ngIf="!isEditMode" appearance="outline" class="full-width full-row">
 			<mat-label>Password</mat-label>
-			<input #pwd matInput type="password" formControlName="password" minlength="8" placeholder="Enter password"/>
+			<input #pwd matInput type="password" formControlName="password" minlength="8" placeholder="Enter password" (blur)="signUpForm.get('password')?.markAsTouched()"/>
 			<button
 				mat-icon-button
 				matSuffix
@@ -94,78 +151,118 @@
 				(mouseleave)="pwd.type='password'">
 				<mat-icon>visibility</mat-icon>
 			</button>
-			<mat-error *ngIf="signUpForm.get('password')?.hasError('required')">
+			<mat-error *ngIf="signUpForm.get('password')?.hasError('required') && signUpForm.get('password')?.touched">
 				Password is required
 			</mat-error>
-			<mat-error *ngIf="signUpForm.get('password')?.hasError('minlength')">
+
+			<mat-error *ngIf="!signUpForm.get('password')?.errors?.['required'] &&signUpForm.get('password')?.hasError('minlength') &&signUpForm.get('password')?.touched">
 				Minimum 8 characters
+			</mat-error>
+
+			<mat-error
+			*ngIf="
+				!signUpForm.get('password')?.errors?.['required'] &&
+				!signUpForm.get('password')?.errors?.['minlength'] &&
+				signUpForm.get('password')?.hasError('backend') &&
+				signUpForm.get('password')?.touched
+			">
+				{{ signUpForm.get('password')?.getError('backend') }}
 			</mat-error>
 		</mat-form-field>
 
-		<div class="form-grid">
+		<div class="row">
 			<!-- DATE OF BIRTH -->
-			<div class="mat-form-field-like">
-				<label class="mat-label">Date of Birth</label>
-				<input
-				type="date"
-				class="native-date-input"
-				formControlName="dob"
-				/>
-				<div class="error-text"
-					*ngIf="
-					signUpForm.get('dob')?.hasError('required') &&
-					(signUpForm.get('dob')?.touched )">
-						Date of birth is required
-				</div>
+			<div class="col-md-6">
+				<mat-form-field appearance="outline" class="w-100">
+					<mat-label>Date of Birth</mat-label>
+					<input matInput
+						readonly
+						placeholder="mm-dd-yyyy"
+						[matDatepicker]="picker"
+						formControlName="dob"
+						(dateChange)="signUpForm.get('dob')?.markAsTouched()"
+						(blur)="signUpForm.get('dob')?.markAsTouched()">
+					<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+					<mat-datepicker #picker></mat-datepicker>
+							<mat-error *ngIf="signUpForm.get('dob')?.hasError('backend')">{{ signUpForm.get('dob')?.getError('backend') }}</mat-error>
+							<mat-error *ngIf="signUpForm.get('dob')?.hasError('invalidDate') && signUpForm.get('dob')?.touched">Enter a valid date</mat-error>
+							<mat-error *ngIf="signUpForm.get('dob')?.hasError('futureDate') && signUpForm.get('dob')?.touched">Date must be in the past</mat-error>
+							<mat-error *ngIf="signUpForm.get('dob')?.hasError('required') && signUpForm.get('dob')?.touched">Date of birth is required</mat-error>
+				</mat-form-field>
 			</div>
 
 			<!-- GENDER -->
-			<mat-form-field appearance="outline" class="full-width">
+			<div class="col-md-6">
+				<mat-form-field appearance="outline" class="w-100">
 				<mat-label>Gender</mat-label>
-				<mat-select formControlName="gender">
+				<mat-select formControlName="gender" (selectionChange)="signUpForm.get('gender')?.markAsTouched()">
 					<mat-option value="MALE">Male</mat-option>
 					<mat-option value="FEMALE">Female</mat-option>
 				</mat-select>
-				<mat-error *ngIf="signUpForm.get('gender')?.hasError('required')">
-					Gender is required
-				</mat-error>
-			</mat-form-field>
-		</div>
-
-		<div class="form-grid address-row">
-			<!-- Addresses (dynamic) -->
-			<div class="form-group" formArrayName="address">
-				<div *ngFor="let addr of addresses.controls; let i = index" [formGroupName]="i" class="address-row">
-					<mat-form-field appearance="outline" class="full-width full-row">
-						<mat-label>Address {{ i + 1 }}</mat-label>
-						<textarea matInput formControlName="address" placeholder="Enter full address" rows="2"></textarea>
-						<mat-error *ngIf="addr.get('address')?.hasError('required')">
-							Address is required
-						</mat-error>
-						<mat-error *ngIf="addr.get('address')?.hasError('minlength')">
-							Address must be at least 5 characters
-						</mat-error>
-					</mat-form-field>
-					<mat-form-field appearance="outline" class="full-width full-row">
-						<mat-label>Address Type</mat-label>
-						<mat-select formControlName="addresstype">
-							<mat-option value="HOME" >Home</mat-option>
-							<mat-option value="WORK">Work</mat-option>
-							<mat-option value="OTHER">Other</mat-option>
-						</mat-select>
-					</mat-form-field>
-					<button mat-icon-button color="warn" type="button" (click)="removeAddress(i)" [disabled]="addresses.length === 1" aria-label="Remove address">
-						<mat-icon>delete</mat-icon>
-					</button>
-				</div>
-				<div class="form-actions">
-					<button mat-flat-button color="primary" type="button" (click)="addAddress()">Add address</button>
-				</div>
+				<mat-error *ngIf="signUpForm.get('gender')?.hasError('required') && signUpForm.get('gender')?.touched">Gender is required</mat-error>
+				</mat-form-field>
 			</div>
 		</div>
 
+
+	<div class="form-group" formArrayName="address">
+
+  <div *ngFor="let addr of addresses.controls; let i = index"
+	  [formGroupName]="i"
+	  class="mb-0">
+
+    <!-- Address row -->
+    <div class="row align-items-center g-2">
+
+      <!-- Address textarea -->
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Address {{ i + 1 }}</mat-label>
+		  <textarea matInput formControlName="address" rows="1" (blur)="addresses.at(i).get('address')?.markAsTouched()"></textarea>
+		  <mat-error *ngIf="addr.get('address')?.hasError('required') && addr.get('address')?.touched">Address is required</mat-error>
+		  <mat-error *ngIf="!addr.get('address')?.errors?.['required'] && addr.get('address')?.hasError('minlength') && addr.get('address')?.touched">Enter at least 5 characters</mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Address type -->
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Address Type</mat-label>
+					<mat-select formControlName="addresstype" (selectionChange)="addresses.at(i).get('addresstype')?.markAsTouched()">
+            <mat-option value="HOME">Home</mat-option>
+            <mat-option value="WORK">Work</mat-option>
+            <mat-option value="OTHER">Other</mat-option>
+          </mat-select>
+					<mat-error *ngIf="addr.get('addresstype')?.hasError('required') && addr.get('addresstype')?.touched">Address type is required</mat-error>
+        </mat-form-field>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom action buttons -->
+	<div class="d-flex align-items-center gap-2 mt-0">
+
+    <button mat-flat-button color="primary"
+            type="button"
+            (click)="addAddress()">
+      Add address
+    </button>
+
+    <!-- Delete last address beside Add -->
+    <button mat-icon-button color="warn"
+            type="button"
+            (click)="removeAddress(addresses.length - 1)"
+            [disabled]="addresses.length === 1">
+      <mat-icon>delete</mat-icon>
+    </button>
+
+  </div>
+
+</div>
+
 		<!-- SUBMIT -->
-		<button type="submit" [disabled]="signUpForm.invalid">
+		<button type="submit" [disabled]="signUpForm.invalid || (isEditMode && !signUpForm.dirty)">
 			{{ isEditMode ? 'Update' : 'Sign Up' }}
 		</button>
 		<div *ngIf="!isEditMode">

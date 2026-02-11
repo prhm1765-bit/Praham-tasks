@@ -8,6 +8,7 @@ export class OnlyNumbersDirective {
 
 	constructor(@Optional() @Self() private control: NgControl) {}
 
+	// Allow only numeric keys and basic navigation/editing keys
 	@HostListener('keydown', ['$event'])
 	public onKeyDown(event: KeyboardEvent) {
 		const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
@@ -19,13 +20,15 @@ export class OnlyNumbersDirective {
 		}
 	}
 
+	// On input (including paste), strip non-numeric characters and
+	// synchronize the underlying form control value.
 	@HostListener('input', ['$event'])
 	public onInput(event: Event) {
 		const input = event.target as HTMLInputElement;
 		const cleanValue = input.value.replace(/[^0-9]/g, '');
 		if (input.value !== cleanValue) {
 			input.value = cleanValue;
-			// IMPORTANT: update form control value AND error
+			// Keep form control in sync without emitting extra value events
 			this.control?.control?.setValue(cleanValue, { emitEvent: false });
 		}
 	}
